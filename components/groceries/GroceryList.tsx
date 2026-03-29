@@ -1,37 +1,20 @@
 "use client";
 
 import { useState, useRef } from "react";
-
-interface GroceryItem {
-  id: string;
-  name: string;
-  bought: boolean;
-}
+import Link from "next/link";
+import { useGroceryItems } from "@/lib/use-grocery-items";
 
 export function GroceryList() {
-  const [items, setItems] = useState<GroceryItem[]>([]);
+  const { items, addItem, toggleItem, clearBought } = useGroceryItems();
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  function addItem() {
+  function handleAdd() {
     const name = input.trim();
     if (!name) return;
-    setItems((prev) => [
-      ...prev,
-      { id: crypto.randomUUID(), name, bought: false },
-    ]);
+    addItem(name);
     setInput("");
     inputRef.current?.focus();
-  }
-
-  function toggleItem(id: string) {
-    setItems((prev) =>
-      prev.map((item) => item.id === id ? { ...item, bought: !item.bought } : item)
-    );
-  }
-
-  function clearBought() {
-    setItems((prev) => prev.filter((item) => !item.bought));
   }
 
   const pending = items.filter((i) => !i.bought);
@@ -47,12 +30,12 @@ export function GroceryList() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && addItem()}
+            onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             placeholder="Add an item..."
             className="flex-1 text-sm bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all placeholder:text-gray-300"
           />
           <button
-            onClick={addItem}
+            onClick={handleAdd}
             disabled={!input.trim()}
             className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-transform"
           >
@@ -62,6 +45,19 @@ export function GroceryList() {
           </button>
         </div>
       </div>
+
+      {/* Master List link */}
+      <Link href="/groceries/master">
+        <div className="bg-emerald-50 border border-emerald-100 rounded-2xl px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">📋</span>
+            <span className="text-sm font-medium text-emerald-700">Master List</span>
+          </div>
+          <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </Link>
 
       {/* Pending items */}
       {pending.length > 0 && (
@@ -121,6 +117,7 @@ export function GroceryList() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
           <p className="text-sm">Your list is empty</p>
+          <p className="text-xs mt-1">Add items above or pick from the Master List</p>
         </div>
       )}
     </div>
