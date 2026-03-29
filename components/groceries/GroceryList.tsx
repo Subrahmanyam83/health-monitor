@@ -33,6 +33,7 @@ export function GroceryList() {
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             placeholder="Add an item..."
             className="flex-1 text-sm bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all placeholder:text-gray-300"
+            style={{ fontSize: "16px" }}
           />
           <button
             onClick={handleAdd}

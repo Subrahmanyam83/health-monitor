@@ -68,6 +68,7 @@ export function EntryForm({ onAdded }: { onAdded: () => void }) {
               type="date" value={date} max={getToday()}
               onChange={(e) => setDate(e.target.value)}
               className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:bg-white transition-all"
+              style={{ fontSize: "16px" }}
             />
           </div>
 
@@ -91,6 +92,7 @@ export function EntryForm({ onAdded }: { onAdded: () => void }) {
               type="number" min="0.5" step="0.5" value={quantity}
               onChange={(e) => setQuantity(e.target.value)}
               className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:bg-white transition-all"
+              style={{ fontSize: "16px" }}
             />
           </div>
         </div>
