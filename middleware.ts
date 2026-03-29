@@ -2,10 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
   const country = request.headers.get("x-vercel-ip-country") ?? "";
-  const userAgent = request.headers.get("user-agent") ?? "";
-  const isIphone = userAgent.includes("iPhone");
 
-  const blocked = country === "IN" || isIphone;
+  const blocked = country === "IN";
 
   if (blocked && request.nextUrl.pathname.startsWith("/alcohol")) {
     return NextResponse.redirect(new URL("/", request.url));
