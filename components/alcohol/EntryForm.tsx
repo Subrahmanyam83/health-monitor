@@ -82,7 +82,7 @@ export function EntryForm({ onAdded }: { onAdded: () => void }) {
 
           <div className="space-y-1">
             <label className="text-xs font-medium text-gray-500">
-              Qty <span className="text-gray-400">({selected.unit === "300ml" ? "glasses" : "pegs"})</span>
+              Qty <span className="text-gray-400">(glasses for beer · pegs for hard)</span>
             </label>
             <input
               type="number" min="0.5" step="0.5" value={quantity}
