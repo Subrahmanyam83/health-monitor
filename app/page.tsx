@@ -23,7 +23,7 @@ export default function Home() {
       {/* Header */}
       <div className="sticky top-0 z-10" style={{ background: "#4f46e5" }}>
         <div className="w-full max-w-md mx-auto px-4 h-14 flex items-center justify-center">
-          <span className="text-sm font-semibold text-white tracking-tight">Rentala Mini Apps</span>
+          <span className="text-lg font-semibold text-white tracking-tight">Rentala Mini Apps</span>
         </div>
       </div>
 
