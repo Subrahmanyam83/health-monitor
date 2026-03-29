@@ -6,14 +6,14 @@ export default function Home() {
     <main className="min-h-screen bg-[#f8f9fc]">
       {/* Header */}
       <div className="sticky top-0 z-10" style={{background:"#4f46e5"}}>
-        <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
+        <div className="w-full max-w-md mx-auto px-4 h-14 flex items-center justify-between">
           <span className="text-sm font-semibold text-white tracking-tight">Health Monitor</span>
           <span className="text-xs text-indigo-200">Personal tracker</span>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-2xl mx-auto px-4 py-5">
+      <div className="w-full max-w-md mx-auto px-4 py-5">
         <Tabs defaultValue="alcohol">
           <TabsList className="mb-5 h-9 bg-gray-100 p-0.5 rounded-lg">
             <TabsTrigger value="alcohol" className="text-xs font-medium h-8 rounded-md px-4">

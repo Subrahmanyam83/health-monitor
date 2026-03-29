@@ -30,14 +30,20 @@ function getToday() { return new Date().toISOString().split("T")[0]; }
 function getDaysAgo(n: number) { return new Date(Date.now() - n * 864e5).toISOString().split("T")[0]; }
 
 export function AlcoholTracker() {
-  const [from, setFrom]       = useState(() => getDaysAgo(30));
-  const [to, setTo]           = useState(getToday);
+  const [from, setFrom]       = useState("");
+  const [to, setTo]           = useState("");
   const [active, setActive]   = useState("30d");
   const [data, setData]       = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState("");
 
+  useEffect(() => {
+    setFrom(getDaysAgo(30));
+    setTo(getToday());
+  }, []);
+
   const fetchData = useCallback(async () => {
+    if (!from || !to) return;
     setLoading(true); setError("");
     try {
       const res = await fetch(`/api/alcohol?from=${from}&to=${to}`);
@@ -82,19 +88,19 @@ export function AlcoholTracker() {
               </button>
             ))}
           </div>
-          <div className="flex gap-3 items-end flex-wrap">
+          <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
               <label className="text-xs font-medium text-gray-400">From</label>
               <input type="date" value={from} max={to}
                 onChange={(e) => { setFrom(e.target.value); setActive(""); }}
-                className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:bg-white transition-all"
+                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:bg-white transition-all"
               />
             </div>
             <div className="space-y-1">
               <label className="text-xs font-medium text-gray-400">To</label>
               <input type="date" value={to} min={from} max={getToday()}
                 onChange={(e) => { setTo(e.target.value); setActive(""); }}
-                className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:bg-white transition-all"
+                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:bg-white transition-all"
               />
             </div>
           </div>

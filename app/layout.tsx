@@ -20,6 +20,11 @@ export const metadata: Metadata = {
     title: "Health Monitor",
     statusBarStyle: "black-translucent",
   },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+  },
 };
 
 export default function RootLayout({
