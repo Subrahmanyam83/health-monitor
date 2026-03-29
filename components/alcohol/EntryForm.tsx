@@ -3,146 +3,111 @@
 import { useState } from "react";
 import { DrinkType, DrinkUnit } from "@/types/alcohol";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { CollapsibleSection } from "@/components/ui/CollapsibleSection";
 
-const DRINK_TYPES: { value: DrinkType; label: string; emoji: string; unit: DrinkUnit; unitLabel: string }[] = [
-  { value: "beer",   label: "Beer",   emoji: "🍺", unit: "300ml", unitLabel: "glasses (300ml each)" },
-  { value: "whisky", label: "Whisky", emoji: "🥃", unit: "peg",   unitLabel: "pegs (30ml each)" },
-  { value: "scotch", label: "Scotch", emoji: "🥃", unit: "peg",   unitLabel: "pegs (30ml each)" },
-  { value: "rum",    label: "Rum",    emoji: "🍹", unit: "peg",   unitLabel: "pegs (30ml each)" },
-  { value: "vodka",  label: "Vodka",  emoji: "🍸", unit: "peg",   unitLabel: "pegs (30ml each)" },
-  { value: "gin",    label: "Gin",    emoji: "🍸", unit: "peg",   unitLabel: "pegs (30ml each)" },
-  { value: "wine",   label: "Wine",   emoji: "🍷", unit: "300ml", unitLabel: "glasses (300ml each)" },
-  { value: "other",  label: "Other",  emoji: "🥂", unit: "peg",   unitLabel: "pegs (30ml each)" },
+const DRINK_TYPES: { value: DrinkType; label: string; unit: DrinkUnit }[] = [
+  { value: "beer",   label: "Beer",   unit: "300ml" },
+  { value: "whisky", label: "Whisky", unit: "peg"   },
+  { value: "scotch", label: "Scotch", unit: "peg"   },
+  { value: "rum",    label: "Rum",    unit: "peg"   },
+  { value: "vodka",  label: "Vodka",  unit: "peg"   },
+  { value: "gin",    label: "Gin",    unit: "peg"   },
+  { value: "wine",   label: "Wine",   unit: "300ml" },
+  { value: "other",  label: "Other",  unit: "peg"   },
 ];
 
-interface Props {
-  onAdded: () => void;
-}
-
-export function EntryForm({ onAdded }: Props) {
+export function EntryForm({ onAdded }: { onAdded: () => void }) {
   const today = new Date().toISOString().split("T")[0];
   const [date, setDate]         = useState(today);
   const [type, setType]         = useState<DrinkType>("beer");
   const [quantity, setQuantity] = useState("1");
   const [loading, setLoading]   = useState(false);
-  const [error, setError]       = useState("");
-  const [success, setSuccess]   = useState(false);
+  const [status, setStatus]     = useState<"idle" | "success" | "error">("idle");
 
-  const selected = DRINK_TYPES.find((d) => d.value === type)!;
-  const totalMl  = parseFloat(quantity || "0") * (selected.unit === "300ml" ? 300 : 30);
+  const selected  = DRINK_TYPES.find((d) => d.value === type)!;
+  const unitSize  = selected.unit === "300ml" ? 300 : 30;
+  const totalMl   = Math.round(parseFloat(quantity || "0") * unitSize);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError("");
-    setSuccess(false);
-
     const qty = parseFloat(quantity);
-    if (!date || !type || isNaN(qty) || qty <= 0) {
-      setError("Please fill all fields with valid values.");
-      return;
-    }
+    if (!date || isNaN(qty) || qty <= 0) return;
 
     setLoading(true);
+    setStatus("idle");
     try {
       const res = await fetch("/api/alcohol", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ date, type, quantity: qty, unit: selected.unit }),
       });
-      if (!res.ok) throw new Error("Failed to save");
-      setSuccess(true);
+      if (!res.ok) throw new Error();
+      setStatus("success");
       setQuantity("1");
       onAdded();
-      setTimeout(() => setSuccess(false), 3000);
+      setTimeout(() => setStatus("idle"), 3000);
     } catch {
-      setError("Failed to save entry. Please try again.");
+      setStatus("error");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className="rounded-2xl overflow-hidden shadow-sm border border-white/80 glass animate-fade-in-up">
-      {/* Card header */}
-      <div className="px-5 py-4 border-b border-white/60" style={{ background: "linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.08))" }}>
-        <div className="flex items-center gap-2">
-          <span className="text-lg">🍻</span>
-          <h2 className="font-semibold text-gray-800">Log a Drink</h2>
-        </div>
-        <p className="text-xs text-gray-500 mt-0.5">Record your alcohol consumption</p>
-      </div>
-
-      <div className="p-5">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Date */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide">Date</label>
-              <input
-                type="date"
-                value={date}
-                max={today}
-                onChange={(e) => setDate(e.target.value)}
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all"
-              />
-            </div>
-
-            {/* Type */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide">Drink Type</label>
-              <Select value={type} onValueChange={(v) => setType(v as DrinkType)}>
-                <SelectTrigger className="w-full rounded-xl border-gray-200 bg-gray-50 h-10">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {DRINK_TYPES.map((d) => (
-                    <SelectItem key={d.value} value={d.value}>
-                      {d.emoji} {d.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Quantity */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                Quantity <span className="text-gray-400 normal-case font-normal">({selected.unitLabel})</span>
-              </label>
-              <input
-                type="number"
-                min="0.5"
-                step="0.5"
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all"
-              />
-            </div>
+    <CollapsibleSection title="Log a Drink" defaultOpen={true}>
+      <form onSubmit={handleSubmit} className="space-y-4 pt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-gray-500">Date</label>
+            <input
+              type="date" value={date} max={today}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:bg-white transition-all"
+            />
           </div>
 
-          {/* Preview */}
-          {parseFloat(quantity) > 0 && (
-            <div className="flex items-center gap-2 text-sm text-indigo-700 bg-indigo-50 rounded-xl px-4 py-2.5 animate-fade-in-up">
-              <span className="text-base">{selected.emoji}</span>
-              <span>
-                <strong>{quantity}</strong> {selected.unit === "300ml" ? `glass${parseFloat(quantity) !== 1 ? "es" : ""}` : `peg${parseFloat(quantity) !== 1 ? "s" : ""}`} of {selected.label} = <strong>{totalMl} ml</strong>
-              </span>
-            </div>
-          )}
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-gray-500">Drink</label>
+            <Select value={type} onValueChange={(v) => setType(v as DrinkType)}>
+              <SelectTrigger className="rounded-lg border-gray-200 bg-gray-50 h-9 text-sm focus:ring-1 focus:ring-indigo-400">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {DRINK_TYPES.map((d) => (
+                  <SelectItem key={d.value} value={d.value} className="text-sm">{d.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-          {error   && <p className="text-sm text-red-600 bg-red-50 rounded-xl px-4 py-2.5 animate-fade-in-up">{error}</p>}
-          {success && <p className="text-sm text-green-700 bg-green-50 rounded-xl px-4 py-2.5 animate-fade-in-up">✓ Entry saved successfully!</p>}
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-gray-500">
+              Qty <span className="text-gray-400">({selected.unit === "300ml" ? "glasses" : "pegs"})</span>
+            </label>
+            <input
+              type="number" min="0.5" step="0.5" value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+              className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:bg-white transition-all"
+            />
+          </div>
+        </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full sm:w-auto px-8 py-2.5 text-sm font-semibold rounded-xl text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
-            style={{ background: loading ? "#9ca3af" : "linear-gradient(135deg, #4f46e5, #7c3aed)", boxShadow: loading ? "none" : "0 4px 15px rgba(79,70,229,0.4)" }}
-          >
-            {loading ? "Saving..." : "Log Entry"}
-          </button>
-        </form>
-      </div>
-    </div>
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-gray-400">
+            {totalMl > 0 ? `≈ ${totalMl} ml total` : ""}
+          </p>
+          <div className="flex items-center gap-3">
+            {status === "success" && <span className="text-xs text-emerald-600 font-medium">Saved</span>}
+            {status === "error"   && <span className="text-xs text-red-500 font-medium">Failed — try again</span>}
+            <button
+              type="submit" disabled={loading}
+              className="px-5 py-2 text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 transition-all active:scale-95"
+            >
+              {loading ? "Saving…" : "Save"}
+            </button>
+          </div>
+        </div>
+      </form>
+    </CollapsibleSection>
   );
 }
