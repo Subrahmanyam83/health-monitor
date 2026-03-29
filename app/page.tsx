@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 
 const apps = [
   {
@@ -7,6 +8,7 @@ const apps = [
     description: "Track your drinks and monitor weekly alcohol intake",
     icon: "🍺",
     color: "#4f46e5",
+    hideInCountries: ["IN"],
   },
   {
     href: "/groceries",
@@ -17,7 +19,14 @@ const apps = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const headersList = await headers();
+  const hideAlcohol = headersList.get("x-hide-alcohol") === "1";
+
+  const visibleApps = apps.filter(
+    (app) => !(hideAlcohol && app.hideInCountries?.length)
+  );
+
   return (
     <main className="min-h-screen bg-[#f8f9fc] flex flex-col">
       {/* Header */}
@@ -27,11 +36,11 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Content centered */}
-      <div className="flex-1 flex items-center">
+      {/* Content */}
+      <div className="flex-1">
         <div className="w-full max-w-md mx-auto px-4 py-6">
           <div className="flex flex-col gap-3">
-            {apps.map((app) => (
+            {visibleApps.map((app) => (
               <Link key={app.href} href={app.href}>
                 <div className="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm border border-gray-100 active:scale-[0.98] transition-transform">
                   <div
