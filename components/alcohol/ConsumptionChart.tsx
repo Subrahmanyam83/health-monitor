@@ -42,7 +42,7 @@ export function ConsumptionChart({ data }: Props) {
       ) : (
         <div className="pt-1">
           <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={chartData} margin={{ top: 4, right: 4, left: -16, bottom: 0 }} barGap={2}>
+            <BarChart data={chartData} margin={{ top: 4, right: 4, left: 8, bottom: 0 }} barGap={2}>
               <defs>
                 <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#818cf8" />
@@ -55,7 +55,7 @@ export function ConsumptionChart({ data }: Props) {
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
               <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#9ca3af" }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 10, fill: "#9ca3af" }} unit="ml" axisLine={false} tickLine={false} width={44} />
+              <YAxis tick={{ fontSize: 10, fill: "#9ca3af" }} unit="ml" axisLine={false} tickLine={false} width={52} />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.05)", radius: 4 }} />
               <Bar dataKey="totalMl"    name="totalMl"    fill="url(#g1)" radius={[4, 4, 0, 0]} maxBarSize={32}>
                 {chartData.map((_, i) => <Cell key={i} />)}

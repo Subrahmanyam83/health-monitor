@@ -5,8 +5,19 @@ import { EntryForm }        from "./EntryForm";
 import { HealthIndicator }  from "./HealthIndicator";
 import { ConsumptionChart } from "./ConsumptionChart";
 import { CollapsibleSection } from "@/components/ui/CollapsibleSection";
-import { AlcoholEntry, AnalysisResult } from "@/types/alcohol";
+import { AlcoholEntry, AnalysisResult, DrinkType, DrinkUnit } from "@/types/alcohol";
 import { ChartDataPoint } from "@/lib/alcohol-analysis";
+
+const DRINK_TYPES: { value: DrinkType; label: string; unit: DrinkUnit }[] = [
+  { value: "beer",   label: "Beer",   unit: "300ml" },
+  { value: "whisky", label: "Whisky", unit: "peg"   },
+  { value: "scotch", label: "Scotch", unit: "peg"   },
+  { value: "rum",    label: "Rum",    unit: "peg"   },
+  { value: "vodka",  label: "Vodka",  unit: "peg"   },
+  { value: "gin",    label: "Gin",    unit: "peg"   },
+  { value: "wine",   label: "Wine",   unit: "300ml" },
+  { value: "other",  label: "Other",  unit: "peg"   },
+];
 
 interface ApiResponse {
   entries:    AlcoholEntry[];
@@ -36,6 +47,9 @@ export function AlcoholTracker() {
   const [data, setData]       = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editFields, setEditFields] = useState<{ date: string; type: DrinkType; quantity: string }>({ date: "", type: "beer", quantity: "1" });
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setFrom(getDaysAgo(30));
@@ -62,6 +76,32 @@ export function AlcoholTracker() {
     setActive(label);
     setFrom(new Date(Date.now() - days * 864e5).toISOString().split("T")[0]);
     setTo(getToday());
+  }
+
+  function startEdit(e: AlcoholEntry) {
+    setEditingId(e.id);
+    setEditFields({ date: e.date, type: e.type, quantity: String(e.quantity) });
+  }
+
+  async function saveEdit(e: AlcoholEntry) {
+    setSaving(true);
+    const drinkType = DRINK_TYPES.find((d) => d.value === editFields.type)!;
+    await fetch("/api/alcohol", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: e.id, date: editFields.date, type: editFields.type, quantity: parseFloat(editFields.quantity), unit: drinkType.unit }),
+    });
+    setSaving(false);
+    setEditingId(null);
+    fetchData();
+  }
+
+  async function deleteEntry(id: string) {
+    setSaving(true);
+    await fetch(`/api/alcohol?id=${id}`, { method: "DELETE" });
+    setSaving(false);
+    setEditingId(null);
+    fetchData();
   }
 
   return (

@@ -82,3 +82,52 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Failed to save entry" }, { status: 500 });
   }
 }
+
+export async function PUT(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { id, date, type, quantity, unit } = body as {
+      id: string;
+      date: string;
+      type: DrinkType;
+      quantity: number;
+      unit: DrinkUnit;
+    };
+
+    if (!id || !date || !type || !quantity || !unit) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    const { content, sha } = await getFile(DATA_PATH);
+    const data: AlcoholData = JSON.parse(content);
+    const idx = data.entries.findIndex((e) => e.id === id);
+    if (idx === -1) return NextResponse.json({ error: "Entry not found" }, { status: 404 });
+
+    data.entries[idx] = { id, date, type, quantity: Number(quantity), unit, totalMl: Number(quantity) * UNIT_ML[unit] };
+    data.entries.sort((a, b) => a.date.localeCompare(b.date));
+
+    await updateFile(DATA_PATH, JSON.stringify(data, null, 2) + "\n", sha, `Update ${type} entry for ${date}`);
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "Failed to update entry" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+    if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
+
+    const { content, sha } = await getFile(DATA_PATH);
+    const data: AlcoholData = JSON.parse(content);
+    data.entries = data.entries.filter((e) => e.id !== id);
+
+    await updateFile(DATA_PATH, JSON.stringify(data, null, 2) + "\n", sha, `Delete entry ${id}`);
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "Failed to delete entry" }, { status: 500 });
+  }
+}
