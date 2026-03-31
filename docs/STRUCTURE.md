@@ -39,8 +39,9 @@ TypeScript type definitions shared across the app.
 
 ### `agents/`
 Specialized AI agents — each is a markdown file that tells Claude how to handle a specific job.
-- Add an agent here when you want Claude to behave a specific way for a task
-- Example: a `planner` agent that thinks through features before coding them
+- `new-app.md` — step-by-step scaffold guide for any new mini app
+- `planner.md` — think through a feature fully before any code is written
+- `code-reviewer.md` — review code after changes for mobile issues, bugs, bad patterns
 
 ### `skills/`
 Reusable workflow instructions — patterns and conventions Claude should follow.
