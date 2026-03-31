@@ -8,15 +8,13 @@ type EditingItem = { catId: string; itemId: string; name: string; toCatId: strin
 
 export function MasterList() {
   const { items: groceryItems, addItem: addToGrocery } = useGroceryItems();
-  const { categories, addCategory, deleteCategory, renameCategory, addItem, deleteItem, renameItem, moveItem } = useMasterList();
+  const { categories, deleteCategory, renameCategory, addItem, deleteItem, renameItem, moveItem } = useMasterList();
 
   const [added, setAdded] = useState<Set<string>>(new Set());
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null);
   const [addingItemCatId, setAddingItemCatId] = useState<string | null>(null);
   const [newItemName, setNewItemName] = useState("");
   const [editingCat, setEditingCat] = useState<{ id: string; name: string } | null>(null);
-  const [addingCategory, setAddingCategory] = useState(false);
-  const [newCatName, setNewCatName] = useState("");
 
   function handleAddToGrocery(name: string) {
     addToGrocery(name);
@@ -54,13 +52,6 @@ export function MasterList() {
     }
   }
 
-  function saveNewCategory() {
-    if (newCatName.trim()) {
-      addCategory(newCatName.trim());
-      setNewCatName("");
-      setAddingCategory(false);
-    }
-  }
 
   return (
     <div className="flex flex-col gap-4 pb-4">
@@ -186,32 +177,6 @@ export function MasterList() {
         </div>
       ))}
 
-      {/* Add new category */}
-      {addingCategory ? (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 px-4 py-4 flex items-center gap-2">
-          <input
-            autoFocus
-            value={newCatName}
-            onChange={(e) => setNewCatName(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && saveNewCategory()}
-            placeholder="Category name..."
-            className="flex-1 text-sm bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-emerald-400"
-            style={{ fontSize: "16px" }}
-          />
-          <button onClick={saveNewCategory} className="text-sm bg-emerald-600 text-white rounded-lg px-3 py-2 font-medium">Add</button>
-          <button onClick={() => { setAddingCategory(false); setNewCatName(""); }} className="text-sm text-gray-400">Cancel</button>
-        </div>
-      ) : (
-        <button
-          onClick={() => setAddingCategory(true)}
-          className="flex items-center justify-center gap-2 bg-white rounded-2xl shadow-sm border border-dashed border-emerald-300 px-4 py-4 text-emerald-600 active:scale-95 transition-transform"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v14M5 12h14" />
-          </svg>
-          <span className="text-sm font-medium">Add Category</span>
-        </button>
-      )}
     </div>
   );
 }
