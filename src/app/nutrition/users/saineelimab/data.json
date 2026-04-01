@@ -1,0 +1,14 @@
+{
+  "members": [
+    {
+      "name": "Neelima",
+      "age": 37,
+      "gender": "female",
+      "weightKg": 87,
+      "heightCm": 165,
+      "activityLevel": "sedentary",
+      "id": "0d829d60-856c-4cb8-8020-7f15817b48df"
+    }
+  ],
+  "logs": []
+}
