@@ -8,9 +8,9 @@ export function AnimatedTitle() {
       <Image
         src="/logo.png"
         alt="Sunakshini Mini Apps"
-        height={32}
-        width={32}
-        style={{ objectFit: "contain" }}
+        height={28}
+        width={28}
+        style={{ objectFit: "contain", mixBlendMode: "screen" }}
         priority
       />
       <span
