@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   title: "Sunakshini Mini Apps",
   description: "Personal mini apps hub",
   icons: {
-    icon: "/Sunakshini Mini Apps-logo.png",
-    apple: "/Sunakshini Mini Apps-logo.png",
+    icon: "/logo.png",
+    apple: "/logo.png",
   },
   appleWebApp: {
     capable: true,
