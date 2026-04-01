@@ -38,6 +38,17 @@ const UNIT_LABELS: Record<PortionUnit, string> = {
   tbsp: "tablespoon (~15g)",
 };
 
+const COMMON_FOODS: UsdaResult[] = [
+  {
+    fdcId: "common-water",
+    name: "Water",
+    caloriesPer100g: 0,
+    proteinPer100g: 0,
+    carbsPer100g: 0,
+    fatPer100g: 0,
+  },
+];
+
 export function FoodSearch({ onAdd }: Props) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<UsdaResult[]>([]);
@@ -76,7 +87,7 @@ export function FoodSearch({ onAdd }: Props) {
   function selectFood(food: UsdaResult) {
     setSelected(food);
     setPortionAmount("1");
-    setPortionUnit("g");
+    setPortionUnit(food.fdcId === "common-water" ? "glass" : "g");
     setResults([]);
     setQuery(food.name);
   }
@@ -140,6 +151,21 @@ export function FoodSearch({ onAdd }: Props) {
 
       {results.length === 0 && query.length >= 2 && !searching && !selected && (
         <p className="text-xs text-gray-400 text-center py-2">No results. Try a different name.</p>
+      )}
+
+      {!selected && query.length === 0 && (
+        <div className="flex flex-wrap gap-2">
+          {COMMON_FOODS.map((food) => (
+            <button
+              key={food.fdcId}
+              type="button"
+              onClick={() => selectFood(food)}
+              className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs text-gray-600 active:bg-gray-100 transition-colors"
+            >
+              + {food.name}
+            </button>
+          ))}
+        </div>
       )}
 
       {selected && (
