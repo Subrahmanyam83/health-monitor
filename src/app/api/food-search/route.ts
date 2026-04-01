@@ -10,11 +10,17 @@ export async function GET(req: NextRequest) {
   }
 
   try {
+    if (!USDA_API_KEY) {
+      return NextResponse.json({ error: "USDA_API_KEY not configured" }, { status: 500 });
+    }
     const res = await fetch(
       `${USDA_BASE}/foods/search?query=${encodeURIComponent(query)}&pageSize=15&api_key=${USDA_API_KEY}`,
       { cache: "no-store" }
     );
-    if (!res.ok) throw new Error(`USDA error: ${res.status}`);
+    if (!res.ok) {
+      const body = await res.text();
+      return NextResponse.json({ error: `USDA error: ${res.status}`, detail: body }, { status: 500 });
+    }
     const json = await res.json();
 
     const foods = (json.foods ?? []).map((f: {

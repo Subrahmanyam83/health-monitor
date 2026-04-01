@@ -54,11 +54,11 @@ export function FoodSearch({ onAdd }: Props) {
     setSearchErr("");
     try {
       const res = await fetch(`/api/food-search?q=${encodeURIComponent(q)}`);
-      if (!res.ok) throw new Error();
       const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "Search failed");
       setResults(json.foods ?? []);
-    } catch {
-      setSearchErr("Search failed. Try again.");
+    } catch (e) {
+      setSearchErr(e instanceof Error ? e.message : "Search failed. Try again.");
     } finally {
       setSearching(false);
     }
