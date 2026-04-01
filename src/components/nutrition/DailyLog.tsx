@@ -32,6 +32,7 @@ export function DailyLog({ member, log, onSave, onBack }: Props) {
   const [addingTo, setAddingTo] = useState<MealType | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveErr, setSaveErr] = useState("");
+  const [editingFood, setEditingFood] = useState<{ mealType: MealType; fdcId: string; portionGrams: string } | null>(null);
 
   const totalCalories = sumMealCalories(meals);
 
@@ -49,6 +50,31 @@ export function DailyLog({ member, log, onSave, onBack }: Props) {
       }
       return [...prev, { id: crypto.randomUUID(), type, foods: [food] }];
     });
+  }
+
+  function updateFoodPortion(mealType: MealType, fdcId: string, newPortionGrams: number) {
+    setMeals((prev) =>
+      prev.map((m) =>
+        m.type === mealType
+          ? {
+              ...m,
+              foods: m.foods.map((f) => {
+                if (f.fdcId !== fdcId) return f;
+                const ratio = newPortionGrams / f.portionGrams;
+                return {
+                  ...f,
+                  portionGrams: newPortionGrams,
+                  calories: Math.round(f.calories * ratio),
+                  proteinG: Math.round(f.proteinG * ratio * 10) / 10,
+                  carbsG: Math.round(f.carbsG * ratio * 10) / 10,
+                  fatG: Math.round(f.fatG * ratio * 10) / 10,
+                };
+              }),
+            }
+          : m
+      )
+    );
+    setEditingFood(null);
   }
 
   function removeFood(mealType: MealType, fdcId: string) {
@@ -132,25 +158,68 @@ export function DailyLog({ member, log, onSave, onBack }: Props) {
 
             {meal && meal.foods.length > 0 ? (
               <div className="divide-y divide-gray-50">
-                {meal.foods.map((food) => (
-                  <div key={food.fdcId + food.portionGrams} className="flex items-center gap-3 px-4 py-2.5">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-800 truncate">{food.name}</p>
-                      <p className="text-xs text-gray-400">
-                        {food.portionGrams}g · P {food.proteinG}g · C {food.carbsG}g · F {food.fatG}g
-                      </p>
+                {meal.foods.map((food) => {
+                  const isEditing = editingFood?.mealType === mealType && editingFood?.fdcId === food.fdcId;
+                  return (
+                    <div key={food.fdcId + food.portionGrams}>
+                      <div className="flex items-center gap-3 px-4 py-2.5">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-gray-800 truncate">{food.name}</p>
+                          <p className="text-xs text-gray-400">
+                            {food.portionGrams}g · P {food.proteinG}g · C {food.carbsG}g · F {food.fatG}g
+                          </p>
+                        </div>
+                        <span className="text-sm font-semibold text-gray-700 flex-shrink-0">{food.calories} kcal</span>
+                        <button
+                          onClick={() => setEditingFood(isEditing ? null : { mealType, fdcId: food.fdcId, portionGrams: String(food.portionGrams) })}
+                          className="w-7 h-7 flex items-center justify-center text-gray-300 active:text-blue-400 flex-shrink-0"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828A2 2 0 0110 16H8v-2a2 2 0 01.586-1.414z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => removeFood(mealType, food.fdcId)}
+                          className="w-7 h-7 flex items-center justify-center text-gray-300 active:text-red-400 flex-shrink-0"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                      {isEditing && (
+                        <div className="flex items-center gap-2 px-4 pb-3 bg-gray-50">
+                          <span className="text-xs text-gray-500">Portion (g):</span>
+                          <input
+                            autoFocus
+                            type="number"
+                            value={editingFood.portionGrams}
+                            onChange={(e) => setEditingFood({ ...editingFood, portionGrams: e.target.value })}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                const g = parseFloat(editingFood.portionGrams);
+                                if (g > 0) updateFoodPortion(mealType, food.fdcId, g);
+                              }
+                              if (e.key === "Escape") setEditingFood(null);
+                            }}
+                            className="w-20 text-sm bg-white border border-gray-200 rounded-lg px-2 py-1 outline-none focus:border-green-400"
+                            style={{ fontSize: "16px" }}
+                          />
+                          <button
+                            onClick={() => {
+                              const g = parseFloat(editingFood.portionGrams);
+                              if (g > 0) updateFoodPortion(mealType, food.fdcId, g);
+                            }}
+                            className="text-xs bg-green-600 text-white rounded-lg px-3 py-1 font-medium"
+                          >
+                            Save
+                          </button>
+                          <button onClick={() => setEditingFood(null)} className="text-xs text-gray-400">Cancel</button>
+                        </div>
+                      )}
                     </div>
-                    <span className="text-sm font-semibold text-gray-700 flex-shrink-0">{food.calories} kcal</span>
-                    <button
-                      onClick={() => removeFood(mealType, food.fdcId)}
-                      className="w-7 h-7 flex items-center justify-center text-gray-300 active:text-red-400 flex-shrink-0"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               !addingTo || addingTo !== mealType ? (

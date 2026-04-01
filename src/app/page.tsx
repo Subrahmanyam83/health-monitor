@@ -16,7 +16,7 @@ const apps = [
     name: "Groceries",
     description: "Manage your shopping list and track bought items",
     icon: "🛒",
-    color: "#059669",
+    color: "#2563eb",
   },
   {
     href: "/nutrition",
