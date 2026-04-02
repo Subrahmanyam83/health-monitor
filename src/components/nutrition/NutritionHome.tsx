@@ -11,6 +11,7 @@ import {
 } from "@/lib/use-nutrition";
 import { MemberForm } from "./MemberForm";
 import { DailyLog } from "./DailyLog";
+import { MonthlyCaloriesChart } from "./MonthlyCaloriesChart";
 
 type View =
   | { type: "home" }
@@ -243,6 +244,10 @@ export function NutritionHome() {
             );
           })}
         </div>
+      )}
+
+      {members.length > 0 && data && (
+        <MonthlyCaloriesChart members={members} logs={data.logs} />
       )}
 
       <div className="pb-8" />
