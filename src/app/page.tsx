@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { headers } from "next/headers";
 import { currentUser } from "@clerk/nextjs/server";
+import { UserButton } from "@clerk/nextjs";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
 
 const apps = [
@@ -41,11 +42,14 @@ export default async function Home() {
     <main className="min-h-screen bg-[#f8f9fc] flex flex-col">
       {/* Header */}
       <div className="sticky top-0 z-10" style={{ background: "#4f46e5" }}>
-        <div className="w-full max-w-md mx-auto px-4 py-2 flex flex-col items-center justify-center">
-          <AnimatedTitle />
-          {firstName && (
-            <span className="text-[11px] text-white/60 font-medium tracking-wide mt-0.5">Welcome, {firstName}</span>
-          )}
+        <div className="w-full max-w-md mx-auto px-4 py-2 flex items-center justify-between">
+          <div className="flex flex-col items-start">
+            <AnimatedTitle />
+            {firstName && (
+              <span className="text-[11px] text-white/60 font-medium tracking-wide mt-0.5">Welcome, {firstName}</span>
+            )}
+          </div>
+          <UserButton />
         </div>
       </div>
 
