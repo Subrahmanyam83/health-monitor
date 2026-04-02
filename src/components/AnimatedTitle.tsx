@@ -1,18 +1,8 @@
 "use client";
 
-import Image from "next/image";
-
 export function AnimatedTitle() {
   return (
-    <div className="flex items-center gap-2">
-      <Image
-        src="/logo.png"
-        alt="Sunakshini Mini Apps"
-        height={28}
-        width={28}
-        style={{ objectFit: "contain", mixBlendMode: "screen" }}
-        priority
-      />
+    <>
       <span
         className="text-xl font-extrabold tracking-wide"
         style={{
@@ -36,6 +26,6 @@ export function AnimatedTitle() {
           100% { opacity: 1; transform: scale(1) translateY(0); }
         }
       `}</style>
-    </div>
+    </>
   );
 }
