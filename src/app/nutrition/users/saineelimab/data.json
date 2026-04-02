@@ -82,6 +82,36 @@
           ]
         }
       ]
+    },
+    {
+      "date": "2026-04-02",
+      "memberId": "0d829d60-856c-4cb8-8020-7f15817b48df",
+      "meals": [
+        {
+          "id": "b70ce6e8-c14e-40d9-837e-51d78d338ea6",
+          "type": "lunch",
+          "foods": [
+            {
+              "fdcId": "1858805",
+              "name": "QUINOA",
+              "portionGrams": 100,
+              "calories": 107,
+              "proteinG": 2.9,
+              "carbsG": 20,
+              "fatG": 1.8
+            },
+            {
+              "fdcId": "2404278",
+              "name": "LENTILS",
+              "portionGrams": 100,
+              "calories": 343,
+              "proteinG": 25.7,
+              "carbsG": 62.9,
+              "fatG": 0
+            }
+          ]
+        }
+      ]
     }
   ]
 }
