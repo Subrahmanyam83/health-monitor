@@ -110,9 +110,67 @@
               "fatG": 0
             }
           ]
+        },
+        {
+          "id": "b6bc76dc-1e71-4fad-aac7-a9b482868b13",
+          "type": "dinner",
+          "foods": [
+            {
+              "fdcId": "170005",
+              "name": "Onions, spring or scallions (includes tops and bulb), raw",
+              "portionGrams": 350,
+              "calories": 112,
+              "proteinG": 6.4,
+              "carbsG": 25.7,
+              "fatG": 0.7
+            },
+            {
+              "fdcId": "2077766",
+              "name": "RICE",
+              "portionGrams": 240,
+              "calories": 854,
+              "proteinG": 16,
+              "carbsG": 186.7,
+              "fatG": 0
+            },
+            {
+              "fdcId": "169353",
+              "name": "Gourd, white-flowered (calabash), cooked, boiled, drained, with salt",
+              "portionGrams": 240,
+              "calories": 31,
+              "proteinG": 1.4,
+              "carbsG": 7.4,
+              "fatG": 0
+            }
+          ]
+        },
+        {
+          "id": "50acabae-890f-4b6f-8838-e69e2a138d1b",
+          "type": "snack",
+          "foods": [
+            {
+              "fdcId": "2100807",
+              "name": "ICE CREAM",
+              "portionGrams": 200,
+              "calories": 400,
+              "proteinG": 6.2,
+              "carbsG": 49.2,
+              "fatG": 21.6
+            },
+            {
+              "fdcId": "1928391",
+              "name": "BROWNIE",
+              "portionGrams": 100,
+              "calories": 357,
+              "proteinG": 4.4,
+              "carbsG": 58.8,
+              "fatG": 13.2
+            }
+          ]
         }
       ],
-      "waterMl": 0
+      "waterMl": 0,
+      "exercises": []
     }
   ]
 }
