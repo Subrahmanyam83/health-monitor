@@ -199,6 +199,30 @@
               "fatG": 13.6
             }
           ]
+        },
+        {
+          "id": "3cfad745-44c9-4a16-ab6d-3ad213f50b8a",
+          "type": "dinner",
+          "foods": [
+            {
+              "fdcId": "2077766",
+              "name": "RICE",
+              "portionGrams": 240,
+              "calories": 854,
+              "proteinG": 16,
+              "carbsG": 186.7,
+              "fatG": 0
+            },
+            {
+              "fdcId": "2710067",
+              "name": "Vegetable curry",
+              "portionGrams": 400,
+              "calories": 344,
+              "proteinG": 6.4,
+              "carbsG": 35.2,
+              "fatG": 21
+            }
+          ]
         }
       ],
       "waterMl": 0,
