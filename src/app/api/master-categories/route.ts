@@ -3,7 +3,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { getFile, getFileOrDefault, updateFile } from "@/lib/github";
 import { MasterCategory } from "@/lib/use-master-list";
 
-const SHARED_DATA_PATH = "src/app/groceries/data/master-categories.json";
+const SHARED_MASTER_PATH = "src/app/groceries/data/master-categories.json";
 const PRIVILEGED_EMAILS = ["gibraltor999@gmail.com", "saineelimb1@gmail.com", "saineelimab1@gmail.com"];
 
 async function getUserInfo() {
@@ -13,22 +13,20 @@ async function getUserInfo() {
   return { email, name };
 }
 
+function getMasterPath(email: string, name: string) {
+  // Privileged users share one master list — changes from either are visible to both
+  if (PRIVILEGED_EMAILS.includes(email)) return SHARED_MASTER_PATH;
+  return `src/app/groceries/users/${name}/master-categories.json`;
+}
+
 export async function GET() {
   try {
     const { email, name } = await getUserInfo();
-    const userPath = `src/app/groceries/users/${name}/master-categories.json`;
-
-    // Try personal file first
+    const path = getMasterPath(email, name);
     try {
-      const { content } = await getFile(userPath);
+      const { content } = await getFile(path);
       return NextResponse.json(JSON.parse(content));
     } catch {
-      // Privileged users fall back to shared master list
-      if (PRIVILEGED_EMAILS.includes(email)) {
-        const { content } = await getFile(SHARED_DATA_PATH);
-        return NextResponse.json(JSON.parse(content));
-      }
-      // Everyone else starts empty
       return NextResponse.json([]);
     }
   } catch (err) {
@@ -39,11 +37,11 @@ export async function GET() {
 
 export async function PUT(req: NextRequest) {
   try {
-    const { name } = await getUserInfo();
-    const userPath = `src/app/groceries/users/${name}/master-categories.json`;
+    const { email, name } = await getUserInfo();
+    const path = getMasterPath(email, name);
     const categories: MasterCategory[] = await req.json();
-    const { sha } = await getFileOrDefault<MasterCategory[]>(userPath, []);
-    await updateFile(userPath, JSON.stringify(categories, null, 2) + "\n", sha, "chore: update master categories");
+    const { sha } = await getFileOrDefault<MasterCategory[]>(path, []);
+    await updateFile(path, JSON.stringify(categories, null, 2) + "\n", sha, "chore: update master categories");
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error(err);

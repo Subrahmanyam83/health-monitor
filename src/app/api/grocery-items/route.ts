@@ -3,9 +3,15 @@ import { currentUser } from "@clerk/nextjs/server";
 import { getFileOrDefault, updateFile } from "@/lib/github";
 import { GroceryItem } from "@/lib/use-grocery-items";
 
+const SHARED_ITEMS_PATH = "src/app/groceries/data/items.json";
+const PRIVILEGED_EMAILS = ["gibraltor999@gmail.com", "saineelimb1@gmail.com", "saineelimab1@gmail.com"];
+
 async function getUserPath() {
   const user = await currentUser();
-  const name = user?.emailAddresses?.[0]?.emailAddress?.split("@")[0] ?? "unknown";
+  const email = user?.emailAddresses?.[0]?.emailAddress ?? "";
+  const name = email.split("@")[0] ?? "unknown";
+  // Privileged users share one grocery list — changes from either are visible to both
+  if (PRIVILEGED_EMAILS.includes(email)) return SHARED_ITEMS_PATH;
   return `src/app/groceries/users/${name}/items.json`;
 }
 
