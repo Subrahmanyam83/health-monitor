@@ -10,24 +10,29 @@ export default async function Home() {
   const firstName = user?.firstName ?? user?.emailAddresses?.[0]?.emailAddress?.split("@")[0];
 
   return (
-    <main className="min-h-screen flex flex-col" style={{ background: "#f0f2f5" }}>
-      {/* Subtle top accent line */}
-      <div className="h-[3px] w-full" style={{ background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f59e0b)" }} />
-
-      {/* Header */}
+    <main className="min-h-screen flex flex-col" style={{ background: "#f4f6f9" }}>
+      {/* 4px rainbow top accent */}
       <div
-        className="sticky top-0 z-20"
+        className="h-1 w-full flex-shrink-0"
+        style={{ background: "linear-gradient(90deg, #6366f1 0%, #8b5cf6 25%, #ec4899 50%, #f59e0b 75%, #10b981 100%)" }}
+      />
+
+      {/* Sticky header */}
+      <div
+        className="sticky top-0 z-20 flex-shrink-0"
         style={{
-          background: "rgba(255,255,255,0.92)",
-          backdropFilter: "blur(16px)",
-          borderBottom: "1px solid #e5e7eb",
+          background: "rgba(255,255,255,0.95)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          borderBottom: "1.5px solid #e5e7eb",
+          boxShadow: "0 1px 12px rgba(0,0,0,0.06)",
         }}
       >
         <div className="w-full max-w-md mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex flex-col items-start">
             <AnimatedTitle />
             {firstName && (
-              <span className="text-[11px] font-medium tracking-wide mt-0.5" style={{ color: "#9ca3af" }}>
+              <span className="text-[11px] font-semibold tracking-wide mt-[2px]" style={{ color: "#9ca3af" }}>
                 Welcome back, {firstName}
               </span>
             )}
@@ -36,10 +41,10 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* Content */}
+      {/* Page content */}
       <div className="flex-1">
-        <div className="w-full max-w-md mx-auto px-4 py-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-4" style={{ color: "#9ca3af" }}>
+        <div className="w-full max-w-md mx-auto px-4 pt-6 pb-10">
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] mb-5" style={{ color: "#c4c9d4" }}>
             Your Apps
           </p>
           <HomeCards hideAlcohol={hideAlcohol} />
