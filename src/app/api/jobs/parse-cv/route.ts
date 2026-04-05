@@ -21,20 +21,48 @@ const SKILL_KEYWORDS = [
   "Agile","Scrum","Product Management","Leadership","Architecture","Microservices","System Design","API Design",
 ];
 
-const ROLE_TO_TITLES: Record<string, string[]> = {
-  "engineer": ["Software Engineer", "Senior Software Engineer", "Tech Lead", "Engineering Manager", "Staff Engineer"],
-  "developer": ["Software Developer", "Full Stack Developer", "Senior Developer", "Tech Lead", "Engineering Manager"],
-  "manager": ["Engineering Manager", "Senior Engineering Manager", "Director of Engineering", "VP Engineering"],
-  "lead": ["Tech Lead", "Engineering Manager", "Principal Engineer", "Staff Engineer", "Director of Engineering"],
-  "architect": ["Software Architect", "Principal Architect", "CTO", "VP Engineering", "Staff Engineer"],
-  "product": ["Product Manager", "Senior Product Manager", "Director of Product", "VP of Product", "Chief Product Officer"],
-  "data": ["Data Scientist", "Senior Data Scientist", "ML Engineer", "Data Engineer", "Head of Data"],
-  "devops": ["DevOps Engineer", "SRE", "Platform Engineer", "Cloud Engineer", "Infrastructure Engineer"],
-  "designer": ["UX Designer", "Product Designer", "Senior Designer", "Design Lead", "Head of Design"],
-  "analyst": ["Business Analyst", "Data Analyst", "Senior Analyst", "Product Analyst"],
-  "cto": ["CTO", "VP Engineering", "Head of Engineering", "Chief Architect"],
-  "director": ["Director of Engineering", "VP Engineering", "Head of Engineering", "Engineering Director"],
-};
+// Order matters — more specific entries must come before generic ones (e.g. "quality" before "engineer")
+const ROLE_TO_TITLES: [string, string[]][] = [
+  // QA / Quality Engineering
+  ["quality engineer",    ["Quality Engineer", "Senior Quality Engineer", "Principal Quality Engineer", "Quality Engineering Lead", "QA Architect"]],
+  ["quality engineering", ["Quality Engineer", "Senior Quality Engineer", "Principal Quality Engineer", "Quality Engineering Lead", "Head of Quality Engineering"]],
+  ["quality architect",   ["QA Architect", "Principal Quality Engineer", "Head of Quality Engineering", "Director of Quality Assurance", "VP Quality Engineering"]],
+  ["quality assurance",   ["QA Engineer", "Senior QA Engineer", "QA Lead", "QA Manager", "Director of Quality Assurance"]],
+  ["quality manager",     ["QA Manager", "Quality Engineering Manager", "Director of Quality Assurance", "Head of Quality", "VP Quality"]],
+  ["quality lead",        ["QA Lead", "Quality Engineering Lead", "Principal Quality Engineer", "Head of Quality", "Director of Quality Assurance"]],
+  ["quality",             ["Quality Engineer", "Senior Quality Engineer", "QA Lead", "QA Manager", "Head of Quality Engineering"]],
+  ["test automation",     ["Test Automation Engineer", "Senior Test Automation Engineer", "Automation Architect", "QA Automation Lead", "Principal Test Engineer"]],
+  ["test lead",           ["Test Lead", "QA Lead", "Test Manager", "Principal Test Engineer", "Director of Testing"]],
+  ["test manager",        ["Test Manager", "QA Manager", "Head of Testing", "Director of Quality Assurance", "VP Engineering Quality"]],
+  ["sre",                 ["Site Reliability Engineer", "SRE", "Platform Engineer", "DevOps Engineer", "Infrastructure Engineer"]],
+  ["devops",              ["DevOps Engineer", "SRE", "Platform Engineer", "Cloud Engineer", "Infrastructure Engineer"]],
+  ["data scientist",      ["Data Scientist", "Senior Data Scientist", "ML Engineer", "Head of Data Science", "Principal Data Scientist"]],
+  ["data engineer",       ["Data Engineer", "Senior Data Engineer", "Data Platform Engineer", "Head of Data Engineering", "Principal Data Engineer"]],
+  ["ml engineer",         ["ML Engineer", "Machine Learning Engineer", "Senior ML Engineer", "AI Engineer", "Head of ML"]],
+  ["software architect",  ["Software Architect", "Principal Architect", "Chief Architect", "VP Engineering", "CTO"]],
+  ["principal engineer",  ["Principal Engineer", "Staff Engineer", "Distinguished Engineer", "Engineering Director", "VP Engineering"]],
+  ["staff engineer",      ["Staff Engineer", "Principal Engineer", "Distinguished Engineer", "Engineering Director", "VP Engineering"]],
+  ["engineering manager", ["Engineering Manager", "Senior Engineering Manager", "Director of Engineering", "VP Engineering", "Head of Engineering"]],
+  ["product manager",     ["Product Manager", "Senior Product Manager", "Director of Product", "VP of Product", "Chief Product Officer"]],
+  ["frontend",            ["Frontend Engineer", "Senior Frontend Engineer", "UI Engineer", "Frontend Tech Lead", "Head of Frontend"]],
+  ["backend",             ["Backend Engineer", "Senior Backend Engineer", "API Engineer", "Backend Tech Lead", "Head of Backend"]],
+  ["full stack",          ["Full Stack Engineer", "Senior Full Stack Engineer", "Full Stack Developer", "Tech Lead", "Engineering Manager"]],
+  ["mobile",              ["Mobile Engineer", "iOS Engineer", "Android Engineer", "Senior Mobile Engineer", "Mobile Tech Lead"]],
+  ["cloud",               ["Cloud Engineer", "Cloud Architect", "Platform Engineer", "Senior Cloud Engineer", "Head of Cloud"]],
+  ["security",            ["Security Engineer", "Application Security Engineer", "Security Architect", "Head of Security", "CISO"]],
+  ["data",                ["Data Scientist", "Senior Data Scientist", "ML Engineer", "Data Engineer", "Head of Data"]],
+  ["architect",           ["Software Architect", "Principal Architect", "CTO", "VP Engineering", "Staff Engineer"]],
+  ["director",            ["Director of Engineering", "VP Engineering", "Head of Engineering", "Engineering Director", "SVP Engineering"]],
+  ["cto",                 ["CTO", "VP Engineering", "Head of Engineering", "Chief Architect", "Engineering Director"]],
+  ["ceo",                 ["CEO", "Co-Founder", "President", "Managing Director", "General Manager"]],
+  ["lead",                ["Tech Lead", "Engineering Manager", "Principal Engineer", "Staff Engineer", "Director of Engineering"]],
+  ["manager",             ["Engineering Manager", "Senior Engineering Manager", "Director of Engineering", "VP Engineering", "Head of Engineering"]],
+  ["developer",           ["Software Developer", "Full Stack Developer", "Senior Developer", "Tech Lead", "Engineering Manager"]],
+  ["engineer",            ["Software Engineer", "Senior Software Engineer", "Tech Lead", "Engineering Manager", "Staff Engineer"]],
+  ["designer",            ["UX Designer", "Product Designer", "Senior Designer", "Design Lead", "Head of Design"]],
+  ["analyst",             ["Business Analyst", "Data Analyst", "Senior Analyst", "Product Analyst", "Principal Analyst"]],
+  ["consultant",          ["Senior Consultant", "Principal Consultant", "Technical Consultant", "Solutions Architect", "Advisory Consultant"]],
+];
 
 function extractName(text: string): string | null {
   const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
@@ -141,10 +169,9 @@ function extractSkills(text: string): string[] {
 function generateJobTitles(currentRole: string): string[] {
   if (!currentRole?.trim()) return [];
   const lower = currentRole.toLowerCase();
-  for (const [keyword, titles] of Object.entries(ROLE_TO_TITLES)) {
+  for (const [keyword, titles] of ROLE_TO_TITLES) {
     if (lower.includes(keyword)) return titles;
   }
-  // Fallback — only use the role itself if we can't map it
   return [currentRole];
 }
 
