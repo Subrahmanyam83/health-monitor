@@ -53,5 +53,10 @@
     "id": "8c986a57-65d2-4b0a-9387-279dde72ea8c",
     "name": "Basmati rice",
     "bought": false
+  },
+  {
+    "id": "32796a95-56da-4654-b359-22a266c92b64",
+    "name": "Rice",
+    "bought": false
   }
 ]
