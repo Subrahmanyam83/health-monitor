@@ -34,4 +34,4 @@ Generate a PAT at GitHub → Settings → Developer settings → Personal access
 | Variable | Description |
 |---|---|
 | `USDA_API_KEY` | API key for the USDA FoodData Central API. Used for nutritional data lookups. Get one at [fdc.nal.usda.gov](https://fdc.nal.usda.gov/api-guide.html). |
-| `RAPIDAPI_KEY` | API key for RapidAPI. Used to access one or more APIs hosted on the RapidAPI marketplace. |
+| `RAPIDAPI_KEY` | API key for RapidAPI. Used to call the JSearch API (`jsearch.p.rapidapi.com`) for job search functionality. |

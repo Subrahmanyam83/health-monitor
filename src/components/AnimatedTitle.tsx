@@ -3,7 +3,7 @@ export function AnimatedTitle() {
     <span
       className="text-xl font-extrabold tracking-tight"
       style={{
-        background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f59e0b, #6366f1)",
+        background: "linear-gradient(90deg, #4338ca, #7c3aed, #db2777, #d97706, #4338ca)",
         backgroundSize: "250% auto",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",

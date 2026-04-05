@@ -21,9 +21,9 @@ export default async function Home() {
       <div
         className="sticky top-0 z-20 flex-shrink-0"
         style={{
-          background: "#d9dfe9",
-          borderBottom: "1.5px solid #c8cfd9",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
+          background: "#c5cdd9",
+          borderBottom: "1.5px solid #b4bdc9",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.09)",
         }}
       >
         <div className="w-full max-w-md mx-auto px-4 py-3 flex items-center justify-between">
