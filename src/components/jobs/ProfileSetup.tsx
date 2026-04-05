@@ -3,6 +3,49 @@
 import { useState, useRef, useEffect } from "react";
 import { JobProfile } from "@/lib/use-jobs";
 
+function RoleTags({ roles, onChange }: { roles: string[]; onChange: (r: string[]) => void }) {
+  const [input, setInput] = useState("");
+
+  function add() {
+    const trimmed = input.trim();
+    if (!trimmed || roles.includes(trimmed)) return;
+    onChange([...roles, trimmed]);
+    setInput("");
+  }
+
+  return (
+    <div className="space-y-1.5">
+      <p className="text-xs text-gray-400">Will search for: <span className="text-gray-300">(tap × to remove)</span></p>
+      <div className="flex flex-wrap gap-1.5">
+        {roles.map((r) => (
+          <span key={r} className="flex items-center gap-1 text-[10px] bg-purple-50 text-purple-700 px-2 py-0.5 rounded-full font-medium">
+            {r}
+            <button type="button" onClick={() => onChange(roles.filter((x) => x !== r))} className="text-purple-300 hover:text-purple-600 leading-none">×</button>
+          </span>
+        ))}
+      </div>
+      <div className="flex gap-1.5">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); add(); } }}
+          placeholder="Add a title…"
+          className="flex-1 text-xs border border-gray-200 rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-400"
+          style={{ fontSize: "14px" }}
+        />
+        <button
+          type="button"
+          onClick={add}
+          className="text-xs px-3 py-1.5 rounded-lg bg-purple-50 text-purple-600 font-medium active:bg-purple-100"
+        >
+          Add
+        </button>
+      </div>
+    </div>
+  );
+}
+
 type Props = {
   initial?: JobProfile | null;
   onSave: (profile: JobProfile) => Promise<void>;
@@ -151,16 +194,7 @@ export function ProfileSetup({ initial, onSave }: Props) {
                 </div>
               </div>
             )}
-            {preferredRoles.length > 0 && (
-              <div>
-                <p className="text-xs text-gray-400 mb-1">Will search for:</p>
-                <div className="flex flex-wrap gap-1">
-                  {preferredRoles.map((r) => (
-                    <span key={r} className="text-[10px] bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full">{r}</span>
-                  ))}
-                </div>
-              </div>
-            )}
+            <RoleTags roles={preferredRoles} onChange={setPreferredRoles} />
           </div>
         )}
       </div>
