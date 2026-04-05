@@ -160,79 +160,87 @@ export function AlcoholTracker() {
           <HealthIndicator analysis={data.analysis} />
           <ConsumptionChart data={data.chartData} />
 
-          {/* Entry log */}
-          {data.entries.length > 0 && (
-            <CollapsibleSection
-              title="Entry Log"
-              defaultOpen={false}
-              badge={`${data.entries.length}`}
-            >
-              <div className="pt-1 flex flex-col divide-y divide-gray-50">
-                {[...data.entries].reverse().map((e) => (
-                  editingId === e.id ? (
-                    <div key={e.id} className="py-3 flex flex-col gap-2 bg-gray-50 px-1 rounded-lg">
-                      <div className="grid grid-cols-3 gap-2">
-                        <input
-                          type="date"
-                          value={editFields.date}
-                          max={new Date().toISOString().split("T")[0]}
-                          onChange={(ev) => setEditFields((f) => ({ ...f, date: ev.target.value }))}
-                          className="col-span-2 text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white outline-none focus:border-indigo-400"
-                          style={{ fontSize: "16px" }}
-                        />
-                        <input
-                          type="number"
-                          min="0.5"
-                          step="0.5"
-                          value={editFields.quantity}
-                          onChange={(ev) => setEditFields((f) => ({ ...f, quantity: ev.target.value }))}
-                          className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white outline-none focus:border-indigo-400"
-                          style={{ fontSize: "16px" }}
-                        />
+          {/* Entry log — grouped by date */}
+          {data.entries.length > 0 && (() => {
+            // Group entries by date, newest first
+            const grouped = [...data.entries].reverse().reduce<Record<string, AlcoholEntry[]>>(
+              (acc, e) => { (acc[e.date] ??= []).push(e); return acc; }, {}
+            );
+            return (
+              <CollapsibleSection
+                title="Entry Log"
+                defaultOpen={false}
+                badge={`${data.entries.length}`}
+              >
+                <div className="pt-1 flex flex-col gap-3">
+                  {Object.entries(grouped).map(([date, entries]) => (
+                    <div key={date}>
+                      {/* Date heading */}
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-400">{date}</span>
+                        <div className="flex-1 h-px bg-indigo-100" />
                       </div>
-                      <select
-                        value={editFields.type}
-                        onChange={(ev) => setEditFields((f) => ({ ...f, type: ev.target.value as DrinkType }))}
-                        className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white outline-none focus:border-indigo-400"
-                        style={{ fontSize: "16px" }}
-                      >
-                        {DRINK_TYPES.map((d) => <option key={d.value} value={d.value}>{d.label}</option>)}
-                      </select>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => saveEdit(e)}
-                          disabled={saving}
-                          className="flex-1 text-xs bg-indigo-600 text-white rounded-lg py-1.5 font-medium disabled:opacity-50"
-                        >Save</button>
-                        <button
-                          onClick={() => deleteEntry(e.id)}
-                          disabled={saving}
-                          className="text-xs bg-red-50 text-red-500 rounded-lg px-3 py-1.5 font-medium disabled:opacity-50"
-                        >Delete</button>
-                        <button
-                          onClick={() => setEditingId(null)}
-                          className="text-xs text-gray-400 px-2"
-                        >Cancel</button>
+                      {/* Entries under this date */}
+                      <div className="flex flex-col divide-y divide-gray-50 pl-2">
+                        {entries.map((e) =>
+                          editingId === e.id ? (
+                            <div key={e.id} className="py-3 flex flex-col gap-2 bg-gray-50 px-1 rounded-lg">
+                              <div className="grid grid-cols-3 gap-2">
+                                <input
+                                  type="date"
+                                  value={editFields.date}
+                                  max={new Date().toISOString().split("T")[0]}
+                                  onChange={(ev) => setEditFields((f) => ({ ...f, date: ev.target.value }))}
+                                  className="col-span-2 text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white outline-none focus:border-indigo-400"
+                                  style={{ fontSize: "16px" }}
+                                />
+                                <input
+                                  type="number"
+                                  min="0.5"
+                                  step="0.5"
+                                  value={editFields.quantity}
+                                  onChange={(ev) => setEditFields((f) => ({ ...f, quantity: ev.target.value }))}
+                                  className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white outline-none focus:border-indigo-400"
+                                  style={{ fontSize: "16px" }}
+                                />
+                              </div>
+                              <select
+                                value={editFields.type}
+                                onChange={(ev) => setEditFields((f) => ({ ...f, type: ev.target.value as DrinkType }))}
+                                className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white outline-none focus:border-indigo-400"
+                                style={{ fontSize: "16px" }}
+                              >
+                                {DRINK_TYPES.map((d) => <option key={d.value} value={d.value}>{d.label}</option>)}
+                              </select>
+                              <div className="flex gap-2">
+                                <button onClick={() => saveEdit(e)} disabled={saving}
+                                  className="flex-1 text-xs bg-indigo-600 text-white rounded-lg py-1.5 font-medium disabled:opacity-50">Save</button>
+                                <button onClick={() => deleteEntry(e.id)} disabled={saving}
+                                  className="text-xs bg-red-50 text-red-500 rounded-lg px-3 py-1.5 font-medium disabled:opacity-50">Delete</button>
+                                <button onClick={() => setEditingId(null)} className="text-xs text-gray-400 px-2">Cancel</button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div key={e.id} className="flex items-center gap-2 py-2">
+                              <div className="flex-1 grid grid-cols-2 gap-1">
+                                <span className="text-xs font-medium text-gray-700">{DRINK_LABELS[e.type] ?? e.type}</span>
+                                <span className="text-xs font-medium text-indigo-600">{e.totalMl} ml</span>
+                              </div>
+                              <button onClick={() => startEdit(e)} className="text-gray-300 hover:text-gray-500 p-1 flex-shrink-0">
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828A2 2 0 0110 16H8v-2a2 2 0 01.586-1.414z" />
+                                </svg>
+                              </button>
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
-                  ) : (
-                    <div key={e.id} className="flex items-center gap-2 py-2.5">
-                      <div className="flex-1 grid grid-cols-3 gap-1">
-                        <span className="text-xs text-gray-500">{e.date}</span>
-                        <span className="text-xs font-medium text-gray-700">{DRINK_LABELS[e.type] ?? e.type}</span>
-                        <span className="text-xs font-medium text-indigo-600">{e.totalMl} ml</span>
-                      </div>
-                      <button onClick={() => startEdit(e)} className="text-gray-300 hover:text-gray-500 p-1 flex-shrink-0">
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828A2 2 0 0110 16H8v-2a2 2 0 01.586-1.414z" />
-                        </svg>
-                      </button>
-                    </div>
-                  )
-                ))}
-              </div>
-            </CollapsibleSection>
-          )}
+                  ))}
+                </div>
+              </CollapsibleSection>
+            );
+          })()}
         </>
       ) : null}
     </div>
