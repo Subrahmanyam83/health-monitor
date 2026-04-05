@@ -9,12 +9,12 @@ type Props = {
 };
 
 export function ProfileSetup({ initial, onSave }: Props) {
-  const [fullName, setFullName] = useState(initial?.fullName ?? "");
-  const [currentRole, setCurrentRole] = useState(initial?.currentRole ?? "");
-  const [yearsOfExperience, setYearsOfExperience] = useState(String(initial?.yearsOfExperience ?? ""));
   const [preferredLocation, setPreferredLocation] = useState(initial?.preferredLocation ?? "");
   const [cvText, setCvText] = useState(initial?.cvText ?? "");
   const [cvFileName, setCvFileName] = useState(initial?.cvFileName ?? "");
+  const [fullName, setFullName] = useState(initial?.fullName ?? "");
+  const [currentRole, setCurrentRole] = useState(initial?.currentRole ?? "");
+  const [yearsOfExperience, setYearsOfExperience] = useState(initial?.yearsOfExperience ?? 0);
   const [skills, setSkills] = useState<string[]>(initial?.skills ?? []);
   const [preferredRoles, setPreferredRoles] = useState<string[]>(initial?.preferredRoles ?? []);
   const [parsing, setParsing] = useState(false);
@@ -30,7 +30,6 @@ export function ProfileSetup({ initial, onSave }: Props) {
     try {
       const form = new FormData();
       form.append("cv", file);
-      form.append("currentRole", currentRole);
       const res = await fetch("/api/jobs/parse-cv", { method: "POST", body: form });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
@@ -38,8 +37,9 @@ export function ProfileSetup({ initial, onSave }: Props) {
       setCvFileName(json.fileName);
       setSkills(json.skills ?? []);
       setPreferredRoles(json.preferredRoles ?? []);
+      if (json.extractedName) setFullName(json.extractedName);
       if (json.extractedRole) setCurrentRole(json.extractedRole);
-      if (json.extractedYears) setYearsOfExperience(String(json.extractedYears));
+      if (json.extractedYears) setYearsOfExperience(json.extractedYears);
     } catch (err) {
       setParseErr(err instanceof Error ? err.message : "Failed to parse CV");
     } finally {
@@ -50,68 +50,46 @@ export function ProfileSetup({ initial, onSave }: Props) {
   async function handleSave() {
     setSaving(true);
     try {
-      await onSave({ fullName, currentRole, yearsOfExperience: Number(yearsOfExperience), skills, preferredRoles, preferredLocation, cvText, cvFileName });
+      await onSave({ fullName, currentRole, yearsOfExperience, skills, preferredRoles, preferredLocation, cvText, cvFileName });
     } finally {
       setSaving(false);
     }
   }
 
-  const isValid = fullName && currentRole && cvText;
+  const isValid = cvText && preferredLocation;
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-4">
-        <p className="text-sm font-semibold text-gray-700">Your Profile</p>
-
-        {[
-          { label: "Full Name", value: fullName, set: setFullName, placeholder: "e.g. Subrahmanyam Rentala" },
-          { label: "Current Role / Job Title", value: currentRole, set: setCurrentRole, placeholder: "e.g. Senior Software Engineer" },
-          { label: "Years of Experience", value: yearsOfExperience, set: setYearsOfExperience, placeholder: "e.g. 10", type: "number" },
-          { label: "Preferred Location", value: preferredLocation, set: setPreferredLocation, placeholder: "e.g. Hyderabad, Remote" },
-        ].map(({ label, value, set, placeholder, type }) => (
-          <div key={label} className="space-y-1">
-            <label className="text-xs text-gray-500">{label}</label>
-            <input
-              type={type ?? "text"}
-              value={value}
-              onChange={(e) => set(e.target.value)}
-              placeholder={placeholder}
-              className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2.5 outline-none focus:border-indigo-400"
-              style={{ fontSize: "16px" }}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* CV Upload */}
+      {/* CV Upload — first */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
         <div>
-          <p className="text-sm font-semibold text-gray-700">Upload CV <span className="text-xs font-normal text-gray-400">(PDF)</span></p>
-          <p className="text-xs text-gray-400 mt-0.5">We'll auto-extract your skills, job title and years of experience</p>
+          <p className="text-sm font-semibold text-gray-700">Upload Your CV <span className="text-xs font-normal text-gray-400">(PDF)</span></p>
+          <p className="text-xs text-gray-400 mt-0.5">We'll extract your name, role, experience and skills automatically</p>
         </div>
         <input ref={fileRef} type="file" accept=".pdf" className="hidden" onChange={handleCvUpload} />
         <button
           onClick={() => fileRef.current?.click()}
-          disabled={parsing || !currentRole}
-          className="w-full h-11 rounded-xl border-2 border-dashed border-gray-200 text-sm text-gray-500 active:bg-gray-50 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+          disabled={parsing}
+          className="w-full h-12 rounded-xl border-2 border-dashed border-gray-200 text-sm text-gray-500 active:bg-gray-50 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
         >
           {parsing ? (
-            <><div className="w-4 h-4 rounded-full border-2 border-gray-200 border-t-indigo-500 animate-spin" /> Extracting skills & job titles…</>
+            <><div className="w-4 h-4 rounded-full border-2 border-gray-200 border-t-indigo-500 animate-spin" /> Extracting from CV…</>
           ) : cvFileName ? (
             <><span>📄</span> {cvFileName} — <span className="text-indigo-500">Replace</span></>
           ) : (
-            <><span>📎</span> {currentRole ? "Choose PDF" : "Enter your role first"}</>
+            <><span>📎</span> Choose PDF</>
           )}
         </button>
         {parseErr && <p className="text-xs text-red-500">{parseErr}</p>}
 
         {cvText && !parsing && (
-          <div className="space-y-2">
-            <p className="text-xs text-green-600 font-medium">✓ CV parsed successfully</p>
+          <div className="space-y-2 pt-1">
+            {fullName && <p className="text-xs text-gray-700 font-medium">👤 {fullName}</p>}
+            {currentRole && <p className="text-xs text-gray-600">💼 {currentRole}{yearsOfExperience ? ` · ${yearsOfExperience} yrs` : ""}</p>}
             {skills.length > 0 && (
               <div>
-                <p className="text-xs text-gray-500 mb-1">Skills found ({skills.length}):</p>
-                <div className="flex flex-wrap gap-1.5">
+                <p className="text-xs text-gray-400 mb-1">Skills found:</p>
+                <div className="flex flex-wrap gap-1">
                   {skills.map((s) => (
                     <span key={s} className="text-[10px] bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">{s}</span>
                   ))}
@@ -120,8 +98,8 @@ export function ProfileSetup({ initial, onSave }: Props) {
             )}
             {preferredRoles.length > 0 && (
               <div>
-                <p className="text-xs text-gray-500 mb-1">Job titles to search:</p>
-                <div className="flex flex-wrap gap-1.5">
+                <p className="text-xs text-gray-400 mb-1">Will search for:</p>
+                <div className="flex flex-wrap gap-1">
                   {preferredRoles.map((r) => (
                     <span key={r} className="text-[10px] bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full">{r}</span>
                   ))}
@@ -130,6 +108,19 @@ export function ProfileSetup({ initial, onSave }: Props) {
             )}
           </div>
         )}
+      </div>
+
+      {/* Location only */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-1">
+        <label className="text-xs text-gray-500">Preferred Location</label>
+        <input
+          type="text"
+          value={preferredLocation}
+          onChange={(e) => setPreferredLocation(e.target.value)}
+          placeholder="e.g. Hyderabad, Remote, Bangalore"
+          className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2.5 outline-none focus:border-indigo-400"
+          style={{ fontSize: "16px" }}
+        />
       </div>
 
       <button

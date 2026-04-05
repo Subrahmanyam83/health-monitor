@@ -36,6 +36,16 @@ const ROLE_TO_TITLES: Record<string, string[]> = {
   "director": ["Director of Engineering", "VP Engineering", "Head of Engineering", "Engineering Director"],
 };
 
+function extractName(text: string): string | null {
+  const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
+  // Name is usually in the first few lines, all caps or title case, 2-4 words
+  for (const line of lines.slice(0, 8)) {
+    if (/^[A-Z][a-z]+ ([A-Z][a-z]+ ?){1,2}$/.test(line) && line.length < 50) return line;
+    if (/^[A-Z ]{4,40}$/.test(line) && line.split(" ").length >= 2) return line.split(" ").map((w: string) => w[0] + w.slice(1).toLowerCase()).join(" ");
+  }
+  return null;
+}
+
 function extractYearsOfExperience(text: string): number | null {
   // Match patterns like "10 years", "10+ years", "10 years of experience"
   const patterns = [
@@ -109,6 +119,7 @@ export async function POST(req: NextRequest) {
     const text = parsed.text;
 
     const skills = extractSkills(text);
+    const extractedName = extractName(text);
     const extractedRole = extractCurrentRole(text);
     const extractedYears = extractYearsOfExperience(text);
     const roleToUse = extractedRole ?? currentRole;
@@ -119,6 +130,7 @@ export async function POST(req: NextRequest) {
       fileName: file.name,
       skills,
       preferredRoles,
+      extractedName,
       extractedRole,
       extractedYears,
     });
