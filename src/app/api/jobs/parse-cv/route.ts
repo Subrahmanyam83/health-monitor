@@ -43,6 +43,9 @@ function extractName(text: string): string | null {
     if (/^[A-Z][a-z]+ ([A-Z][a-z]+ ?){1,2}$/.test(line) && line.length < 50) return line;
     if (/^[A-Z ]{4,40}$/.test(line) && line.split(" ").length >= 2) return line.split(" ").map((w: string) => w[0] + w.slice(1).toLowerCase()).join(" ");
   }
+  // Merged text fallback — name is typically the first 2-3 words before an email/phone/link
+  const mergedMatch = text.match(/^([A-Z][a-z]+(?: [A-Z][a-z]+){1,2})\s+(?:[a-z0-9._%+-]+@|\+\d|https?:\/\/)/);
+  if (mergedMatch) return mergedMatch[1];
   return null;
 }
 
@@ -72,9 +75,6 @@ function extractYearsOfExperience(text: string): number | null {
 }
 
 function extractCurrentRole(text: string): string | null {
-  const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
-
-  // Title keywords that indicate a job role line
   const titleWords = [
     "engineer", "developer", "architect", "scientist", "analyst", "manager",
     "designer", "consultant", "lead", "specialist", "officer", "director",
@@ -84,35 +84,40 @@ function extractCurrentRole(text: string): string | null {
     "product", "program", "project", "data", "cloud", "platform", "mobile",
   ];
 
-  // Date pattern — lines near dates are likely in the experience section
+  const hasTitle = (s: string) => titleWords.some((w) => s.toLowerCase().includes(w));
+
+  // Strategy 1: line-based (works when PDF preserves newlines)
+  const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
   const datePattern = /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|january|february|march|april|june|july|august|september|october|november|december)[\s,]+\d{4}\b|\b\d{4}\s*[-–]\s*(\d{4}|present|current)\b/i;
 
-  // Find lines that look like job titles near date lines
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    const lower = line.toLowerCase();
-
-    // Check if this line or adjacent lines have a date
     const nearDate = [lines[i - 1], lines[i], lines[i + 1], lines[i + 2]]
       .filter(Boolean)
       .some((l) => datePattern.test(l));
-
     if (!nearDate) continue;
-
-    // Check if this line contains a title word and is reasonably short
-    const hasTitle = titleWords.some((w) => lower.includes(w));
-    if (hasTitle && line.length > 3 && line.length < 80) {
-      // Clean up separators like "Senior Engineer | Company" → "Senior Engineer"
+    if (hasTitle(line) && line.length > 3 && line.length < 100) {
       const cleaned = line.split(/\s*[|•·@]\s*/)[0].trim();
       if (cleaned.length > 3) return cleaned;
     }
   }
 
-  // Fallback: scan first 40 lines for any title-like line
-  for (const line of lines.slice(0, 40)) {
-    const lower = line.toLowerCase();
-    const hasTitle = titleWords.some((w) => lower.includes(w));
-    if (hasTitle && line.length > 3 && line.length < 60) {
+  // Strategy 2: merged text — "Company | Location | Role | Date" pattern
+  // Used when unpdf collapses all newlines into one blob
+  const expStart = text.search(/WORK\s+EXPERIENCE|EXPERIENCE|EMPLOYMENT\s+HISTORY/i);
+  const workText = expStart >= 0 ? text.slice(expStart) : text;
+
+  // Match: X | Y | Role | Month YYYY or YYYY
+  const pipePattern = /[A-Za-z][^|]{2,60}\s*\|\s*[^|]{2,60}\s*\|\s*([A-Za-z][^|]{4,70}?)\s*\|\s*(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[\s,]+\d{4}|\d{4})/i;
+  const pipeMatch = workText.match(pipePattern);
+  if (pipeMatch) {
+    const role = pipeMatch[1].trim();
+    if (hasTitle(role) && role.length > 3 && role.length < 80) return role;
+  }
+
+  // Strategy 3: scan first 60 lines for short title lines (last resort)
+  for (const line of lines.slice(0, 60)) {
+    if (hasTitle(line) && line.length > 3 && line.length < 60) {
       const cleaned = line.split(/\s*[|•·@]\s*/)[0].trim();
       if (cleaned.length > 3) return cleaned;
     }
