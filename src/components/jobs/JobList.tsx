@@ -21,19 +21,20 @@ export function JobList({ profile, appliedJobs, onApply }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [activeRole, setActiveRole] = useState(profile.preferredRoles[0] ?? "");
+  const [activeLocation, setActiveLocation] = useState(profile.preferredLocations[0] ?? "");
   const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => {
-    if (activeRole) fetchJobs(activeRole);
-  }, [activeRole]);
+    if (activeRole) fetchJobs(activeRole, activeLocation);
+  }, [activeRole, activeLocation]);
 
-  async function fetchJobs(role: string) {
+  async function fetchJobs(role: string, location: string) {
     setLoading(true);
     setError("");
     setJobs([]);
     try {
       const res = await fetch(
-        `/api/jobs/search?q=${encodeURIComponent(role)}&location=${encodeURIComponent(profile.preferredLocation)}`
+        `/api/jobs/search?q=${encodeURIComponent(role)}&location=${encodeURIComponent(location)}`
       );
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
@@ -50,6 +51,7 @@ export function JobList({ profile, appliedJobs, onApply }: Props) {
   return (
     <div className="space-y-4">
       {/* Role selector */}
+      {/* Role selector */}
       <div className="flex gap-2 overflow-x-auto pb-1">
         {profile.preferredRoles.map((role) => (
           <button
@@ -65,12 +67,31 @@ export function JobList({ profile, appliedJobs, onApply }: Props) {
           </button>
         ))}
         <button
-          onClick={() => fetchJobs(activeRole)}
+          onClick={() => fetchJobs(activeRole, activeLocation)}
           className="flex-shrink-0 h-8 px-3 rounded-full text-xs font-medium bg-gray-100 text-gray-500 active:bg-gray-200"
         >
           🔄 Refresh
         </button>
       </div>
+
+      {/* Location selector */}
+      {profile.preferredLocations.length > 1 && (
+        <div className="flex gap-2 overflow-x-auto pb-1">
+          {profile.preferredLocations.map((loc) => (
+            <button
+              key={loc}
+              onClick={() => setActiveLocation(loc)}
+              className="flex-shrink-0 h-7 px-3 rounded-full text-xs font-medium transition-all"
+              style={{
+                background: activeLocation === loc ? "#0f172a" : "#f1f5f9",
+                color: activeLocation === loc ? "white" : "#64748b",
+              }}
+            >
+              📍 {loc}
+            </button>
+          ))}
+        </div>
+      )}
 
       {loading && (
         <div className="flex items-center justify-center py-12">

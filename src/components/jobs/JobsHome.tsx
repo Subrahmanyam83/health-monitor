@@ -69,7 +69,7 @@ export function JobsHome() {
           <div>
             <p className="text-sm font-semibold text-gray-800">{data.profile.fullName}</p>
             <p className="text-xs text-gray-400">{data.profile.currentRole} · {data.profile.yearsOfExperience} yrs exp</p>
-            <p className="text-xs text-gray-400 mt-0.5">📍 {data.profile.preferredLocation}</p>
+            <p className="text-xs text-gray-400 mt-0.5">📍 {data.profile.preferredLocations.join(" · ")}</p>
           </div>
           <button
             onClick={() => setEditingProfile(true)}

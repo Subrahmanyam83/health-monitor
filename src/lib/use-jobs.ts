@@ -8,7 +8,7 @@ export type JobProfile = {
   yearsOfExperience: number;
   skills: string[];
   preferredRoles: string[];
-  preferredLocation: string;
+  preferredLocations: string[];
   cvText: string;
   cvFileName?: string;
 };

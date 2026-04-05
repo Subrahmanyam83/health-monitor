@@ -9,7 +9,8 @@ type Props = {
 };
 
 export function ProfileSetup({ initial, onSave }: Props) {
-  const [preferredLocation, setPreferredLocation] = useState(initial?.preferredLocation ?? "");
+  const [preferredLocations, setPreferredLocations] = useState<string[]>(initial?.preferredLocations ?? []);
+  const [locationInput, setLocationInput] = useState("");
   const [cvText, setCvText] = useState(initial?.cvText ?? "");
   const [cvFileName, setCvFileName] = useState(initial?.cvFileName ?? "");
   const [fullName, setFullName] = useState(initial?.fullName ?? "");
@@ -27,16 +28,28 @@ export function ProfileSetup({ initial, onSave }: Props) {
 
   useEffect(() => {
     if (locationDebounce.current) clearTimeout(locationDebounce.current);
-    if (!preferredLocation || preferredLocation.length < 2) { setLocationSuggestions([]); return; }
+    if (!locationInput || locationInput.length < 2) { setLocationSuggestions([]); return; }
     locationDebounce.current = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/location-suggest?q=${encodeURIComponent(preferredLocation)}`);
+        const res = await fetch(`/api/location-suggest?q=${encodeURIComponent(locationInput)}`);
         const json = await res.json();
-        setLocationSuggestions(json.results ?? []);
+        setLocationSuggestions((json.results ?? []).filter((s: string) => !preferredLocations.includes(s)));
       } catch { setLocationSuggestions([]); }
     }, 350);
     return () => { if (locationDebounce.current) clearTimeout(locationDebounce.current); };
-  }, [preferredLocation]);
+  }, [locationInput, preferredLocations]);
+
+  function addLocation(loc: string) {
+    const trimmed = loc.trim();
+    if (!trimmed || preferredLocations.includes(trimmed)) return;
+    setPreferredLocations((prev) => [...prev, trimmed]);
+    setLocationInput("");
+    setLocationSuggestions([]);
+  }
+
+  function removeLocation(loc: string) {
+    setPreferredLocations((prev) => prev.filter((l) => l !== loc));
+  }
 
   async function handleCvUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -67,17 +80,17 @@ export function ProfileSetup({ initial, onSave }: Props) {
   async function handleSave() {
     setSaving(true);
     try {
-      await onSave({ fullName, currentRole, yearsOfExperience, skills, preferredRoles, preferredLocation, cvText, cvFileName });
+      await onSave({ fullName, currentRole, yearsOfExperience, skills, preferredRoles, preferredLocations, cvText, cvFileName });
     } finally {
       setSaving(false);
     }
   }
 
-  const isValid = cvText && preferredLocation;
+  const isValid = cvText && preferredLocations.length > 0;
 
   return (
     <div className="space-y-4">
-      {/* CV Upload — first */}
+      {/* CV Upload */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
         <div>
           <p className="text-sm font-semibold text-gray-700">Upload Your CV <span className="text-xs font-normal text-gray-400">(PDF)</span></p>
@@ -152,16 +165,37 @@ export function ProfileSetup({ initial, onSave }: Props) {
         )}
       </div>
 
-      {/* Location with autocomplete */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-1">
-        <label className="text-xs text-gray-500">Preferred Location</label>
+      {/* Locations */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-2">
+        <label className="text-xs text-gray-500">Preferred Locations</label>
+
+        {/* Added locations */}
+        {preferredLocations.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {preferredLocations.map((loc) => (
+              <span key={loc} className="flex items-center gap-1 text-xs bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full font-medium">
+                📍 {loc}
+                <button
+                  type="button"
+                  onClick={() => removeLocation(loc)}
+                  className="ml-0.5 text-indigo-400 hover:text-indigo-700 leading-none"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Input with autocomplete */}
         <div className="relative">
           <input
             type="text"
-            value={preferredLocation}
-            onChange={(e) => setPreferredLocation(e.target.value)}
+            value={locationInput}
+            onChange={(e) => setLocationInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addLocation(locationInput); } }}
             onBlur={() => setTimeout(() => setLocationSuggestions([]), 150)}
-            placeholder="e.g. Hyderabad, Remote, Bangalore"
+            placeholder={preferredLocations.length > 0 ? "Add another location…" : "e.g. London, Remote, Hyderabad"}
             className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2.5 outline-none focus:border-indigo-400"
             style={{ fontSize: "16px" }}
           />
@@ -171,7 +205,7 @@ export function ProfileSetup({ initial, onSave }: Props) {
                 <button
                   key={s}
                   type="button"
-                  onMouseDown={() => { setPreferredLocation(s); setLocationSuggestions([]); }}
+                  onMouseDown={() => addLocation(s)}
                   className="w-full text-left px-3 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 active:bg-indigo-100 border-b border-gray-50 last:border-0"
                 >
                   📍 {s}
@@ -180,6 +214,7 @@ export function ProfileSetup({ initial, onSave }: Props) {
             </div>
           )}
         </div>
+        <p className="text-[10px] text-gray-400">Press Enter or pick a suggestion to add. Add multiple.</p>
       </div>
 
       <button
