@@ -21,18 +21,16 @@ export default async function Home() {
       <div
         className="sticky top-0 z-20 flex-shrink-0"
         style={{
-          background: "rgba(232,237,245,0.97)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          borderBottom: "1.5px solid #d8dde8",
-          boxShadow: "0 1px 12px rgba(99,102,241,0.07)",
+          background: "linear-gradient(135deg, #3730a3 0%, #4f46e5 50%, #6d28d9 100%)",
+          borderBottom: "none",
+          boxShadow: "0 4px 20px rgba(79,70,229,0.3)",
         }}
       >
         <div className="w-full max-w-md mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex flex-col items-start">
             <AnimatedTitle />
             {firstName && (
-              <span className="text-[11px] font-semibold tracking-wide mt-[2px]" style={{ color: "#9ca3af" }}>
+              <span className="text-[11px] font-semibold tracking-wide mt-[2px]" style={{ color: "rgba(255,255,255,0.6)" }}>
                 Welcome back, {firstName}
               </span>
             )}
