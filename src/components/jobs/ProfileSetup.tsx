@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { JobProfile } from "@/lib/use-jobs";
 
 type Props = {
@@ -21,7 +21,22 @@ export function ProfileSetup({ initial, onSave }: Props) {
   const [parseErr, setParseErr] = useState("");
   const [saving, setSaving] = useState(false);
   const [debugLines, setDebugLines] = useState<string[]>([]);
+  const [locationSuggestions, setLocationSuggestions] = useState<string[]>([]);
+  const locationDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (locationDebounce.current) clearTimeout(locationDebounce.current);
+    if (!preferredLocation || preferredLocation.length < 2) { setLocationSuggestions([]); return; }
+    locationDebounce.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/location-suggest?q=${encodeURIComponent(preferredLocation)}`);
+        const json = await res.json();
+        setLocationSuggestions(json.results ?? []);
+      } catch { setLocationSuggestions([]); }
+    }, 350);
+    return () => { if (locationDebounce.current) clearTimeout(locationDebounce.current); };
+  }, [preferredLocation]);
 
   async function handleCvUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -137,17 +152,34 @@ export function ProfileSetup({ initial, onSave }: Props) {
         )}
       </div>
 
-      {/* Location only */}
+      {/* Location with autocomplete */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-1">
         <label className="text-xs text-gray-500">Preferred Location</label>
-        <input
-          type="text"
-          value={preferredLocation}
-          onChange={(e) => setPreferredLocation(e.target.value)}
-          placeholder="e.g. Hyderabad, Remote, Bangalore"
-          className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2.5 outline-none focus:border-indigo-400"
-          style={{ fontSize: "16px" }}
-        />
+        <div className="relative">
+          <input
+            type="text"
+            value={preferredLocation}
+            onChange={(e) => setPreferredLocation(e.target.value)}
+            onBlur={() => setTimeout(() => setLocationSuggestions([]), 150)}
+            placeholder="e.g. Hyderabad, Remote, Bangalore"
+            className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2.5 outline-none focus:border-indigo-400"
+            style={{ fontSize: "16px" }}
+          />
+          {locationSuggestions.length > 0 && (
+            <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-100 rounded-xl shadow-lg z-20 overflow-hidden">
+              {locationSuggestions.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onMouseDown={() => { setPreferredLocation(s); setLocationSuggestions([]); }}
+                  className="w-full text-left px-3 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 active:bg-indigo-100 border-b border-gray-50 last:border-0"
+                >
+                  📍 {s}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       <button
