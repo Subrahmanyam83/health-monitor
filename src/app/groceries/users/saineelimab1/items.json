@@ -58,5 +58,10 @@
     "id": "32796a95-56da-4654-b359-22a266c92b64",
     "name": "Rice",
     "bought": false
+  },
+  {
+    "id": "aa55b734-5eba-47aa-b822-3ae6d805fdbb",
+    "name": "Garlic",
+    "bought": false
   }
 ]
