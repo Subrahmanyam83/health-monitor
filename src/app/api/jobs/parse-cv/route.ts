@@ -74,16 +74,50 @@ function extractYearsOfExperience(text: string): number | null {
 function extractCurrentRole(text: string): string | null {
   const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
 
-  const rolePatterns = [
-    /^(senior|lead|principal|staff|junior|associate|head of|vp|director|chief|cto|ceo|coo|manager)?\s*(software|full.?stack|frontend|backend|data|ml|ai|devops|product|cloud|mobile|platform|qa|site reliability|security)?\s*(engineer|developer|architect|scientist|analyst|manager|designer|consultant|lead|specialist|officer)\b/i,
+  // Title keywords that indicate a job role line
+  const titleWords = [
+    "engineer", "developer", "architect", "scientist", "analyst", "manager",
+    "designer", "consultant", "lead", "specialist", "officer", "director",
+    "president", "head", "vp", "vice president", "cto", "ceo", "coo",
+    "associate", "principal", "staff", "senior", "junior", "intern",
+    "devops", "sre", "fullstack", "full stack", "frontend", "backend",
+    "product", "program", "project", "data", "cloud", "platform", "mobile",
   ];
 
-  for (const line of lines.slice(0, 30)) {
-    for (const pattern of rolePatterns) {
-      const match = line.match(pattern);
-      if (match && match[0].length > 4) return match[0].trim();
+  // Date pattern — lines near dates are likely in the experience section
+  const datePattern = /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|january|february|march|april|june|july|august|september|october|november|december)[\s,]+\d{4}\b|\b\d{4}\s*[-–]\s*(\d{4}|present|current)\b/i;
+
+  // Find lines that look like job titles near date lines
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const lower = line.toLowerCase();
+
+    // Check if this line or adjacent lines have a date
+    const nearDate = [lines[i - 1], lines[i], lines[i + 1], lines[i + 2]]
+      .filter(Boolean)
+      .some((l) => datePattern.test(l));
+
+    if (!nearDate) continue;
+
+    // Check if this line contains a title word and is reasonably short
+    const hasTitle = titleWords.some((w) => lower.includes(w));
+    if (hasTitle && line.length > 3 && line.length < 80) {
+      // Clean up separators like "Senior Engineer | Company" → "Senior Engineer"
+      const cleaned = line.split(/\s*[|•·@]\s*/)[0].trim();
+      if (cleaned.length > 3) return cleaned;
     }
   }
+
+  // Fallback: scan first 40 lines for any title-like line
+  for (const line of lines.slice(0, 40)) {
+    const lower = line.toLowerCase();
+    const hasTitle = titleWords.some((w) => lower.includes(w));
+    if (hasTitle && line.length > 3 && line.length < 60) {
+      const cleaned = line.split(/\s*[|•·@]\s*/)[0].trim();
+      if (cleaned.length > 3) return cleaned;
+    }
+  }
+
   return null;
 }
 
