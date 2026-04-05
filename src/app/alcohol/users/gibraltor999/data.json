@@ -15,6 +15,14 @@
       "quantity": 2,
       "unit": "300ml",
       "totalMl": 600
+    },
+    {
+      "id": "2026-04-05T21:55:45.927Z",
+      "date": "2026-04-01",
+      "type": "vodka",
+      "quantity": 2,
+      "unit": "peg",
+      "totalMl": 60
     }
   ]
 }
