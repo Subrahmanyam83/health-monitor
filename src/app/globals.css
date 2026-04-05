@@ -147,27 +147,25 @@
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* HomeCards gradient border flow — one per card index for varied speed */
-@keyframes gradientShift0 {
+/* HomeCards gradient border flow */
+@keyframes gradientShift {
   0%   { background-position: 0% 50%; }
   50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-@keyframes gradientShift1 {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+
+/* HomeCards entrance — pure CSS, no JS state needed */
+@keyframes cardEnter {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
-@keyframes gradientShift2 {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+.card-enter {
+  animation: cardEnter 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
-@keyframes gradientShift3 {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+.card-delay-0 { animation-delay: 60ms; }
+.card-delay-1 { animation-delay: 150ms; }
+.card-delay-2 { animation-delay: 240ms; }
+.card-delay-3 { animation-delay: 330ms; }
 
 .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) both; }
 

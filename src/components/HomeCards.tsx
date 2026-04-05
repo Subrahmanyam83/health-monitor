@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 function BeerIcon() {
   return (
@@ -141,26 +140,17 @@ const appDefs = [
 ];
 
 function AppCard({ app, index }: { app: typeof appDefs[0]; index: number }) {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 60 + index * 90);
-    return () => clearTimeout(t);
-  }, [index]);
-
   return (
     <Link href={app.href} className="block group">
-      {/* Animated gradient border wrapper */}
+      {/* Animated gradient border wrapper — CSS-only entrance, no JS state */}
       <div
-        className="p-[3px] rounded-[20px] transition-all duration-300 ease-out group-hover:scale-[1.025] group-hover:-translate-y-1 group-active:scale-[0.97]"
+        className={`card-enter card-delay-${index} p-[3px] rounded-[20px] transition-transform duration-300 ease-out group-hover:scale-[1.025] group-hover:-translate-y-1 group-active:scale-[0.97]`}
         style={{
           background: `linear-gradient(135deg, ${app.borderColors})`,
           backgroundSize: "300% 300%",
-          animation: `gradientShift${index} 4s ease infinite`,
+          animation: `cardEnter 0.45s cubic-bezier(0.34,1.56,0.64,1) both, gradientShift 4s ease infinite`,
+          animationDelay: `${60 + index * 90}ms, 0ms`,
           boxShadow: `0 6px 24px -6px ${app.iconShadow}`,
-          opacity: visible ? 1 : 0,
-          transform: visible ? "translateY(0) scale(1)" : "translateY(18px) scale(0.97)",
-          transition: "opacity 0.4s cubic-bezier(0.34,1.56,0.64,1), transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease",
         }}
       >
         {/* Card inner */}

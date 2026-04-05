@@ -3,7 +3,7 @@
 export function AnimatedTitle() {
   return (
     <span
-      className="text-[18px] font-extrabold tracking-tight"
+      className="text-xl font-extrabold tracking-tight"
       style={{
         background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f59e0b, #6366f1)",
         backgroundSize: "250% auto",
