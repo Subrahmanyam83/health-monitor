@@ -10,7 +10,7 @@ export default async function Home() {
   const firstName = user?.firstName ?? user?.emailAddresses?.[0]?.emailAddress?.split("@")[0];
 
   return (
-    <main className="min-h-screen flex flex-col" style={{ background: "#f5efe8" }}>
+    <main className="min-h-screen flex flex-col" style={{ background: "#f0f2f5" }}>
       {/* 4px rainbow top accent */}
       <div
         className="h-1 w-full flex-shrink-0"
