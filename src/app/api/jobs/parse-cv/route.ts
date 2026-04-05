@@ -114,7 +114,8 @@ export async function POST(req: NextRequest) {
     if (!file) return NextResponse.json({ error: "No file" }, { status: 400 });
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const pdfParse = (await import("pdf-parse")).default;
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const pdfParse = require("pdf-parse");
     const parsed = await pdfParse(buffer);
     const text = parsed.text;
 
