@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: "MiniApps",
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default",
   },
   viewport: {
     width: "device-width",
