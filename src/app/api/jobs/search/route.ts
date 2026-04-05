@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const res = await fetch(
-      `https://jsearch.p.rapidapi.com/search?query=${encodeURIComponent(query + " " + location)}&page=1&num_pages=1&date_posted=today`,
+      `https://jsearch.p.rapidapi.com/search?query=${encodeURIComponent(query + " " + location)}&page=1&num_pages=2&date_posted=week`,
       {
         headers: {
           "X-RapidAPI-Key": RAPIDAPI_KEY,
