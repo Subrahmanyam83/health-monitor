@@ -1,0 +1,28 @@
+{
+  "entries": [
+    {
+      "id": "2026-04-05T21:54:56.333Z",
+      "date": "2026-03-28",
+      "type": "beer",
+      "quantity": 4,
+      "unit": "300ml",
+      "totalMl": 1200
+    },
+    {
+      "id": "2026-04-05T21:55:30.008Z",
+      "date": "2026-04-01",
+      "type": "beer",
+      "quantity": 4,
+      "unit": "300ml",
+      "totalMl": 1200
+    },
+    {
+      "id": "2026-04-05T21:55:45.927Z",
+      "date": "2026-04-01",
+      "type": "vodka",
+      "quantity": 2,
+      "unit": "peg",
+      "totalMl": 60
+    }
+  ]
+}
