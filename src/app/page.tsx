@@ -27,6 +27,13 @@ const apps = [
     icon: "🥗",
     color: "#16a34a",
   },
+  {
+    href: "/jobs",
+    name: "Job Finder",
+    description: "Daily job matches from LinkedIn, Indeed & more based on your profile",
+    icon: "💼",
+    color: "#7c3aed",
+  },
 ];
 
 export default async function Home() {
