@@ -4,8 +4,8 @@ import { AlcoholTracker } from "@/components/alcohol/AlcoholTracker";
 export default function AlcoholPage() {
   return (
     <main className="min-h-screen bg-[#f8f9fc]">
-      {/* Header */}
-      <div className="sticky top-0 z-10" style={{ background: "#4f46e5" }}>
+      <div style={{ height: "env(safe-area-inset-top)", background: "#4f46e5", flexShrink: 0 }} />
+      <div className="sticky z-10" style={{ top: "env(safe-area-inset-top)", background: "#4f46e5" }}>
         <div className="w-full max-w-md mx-auto px-4 h-14 flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2 text-white transition-colors active:opacity-70">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -15,8 +15,6 @@ export default function AlcoholPage() {
           </Link>
         </div>
       </div>
-
-      {/* Content */}
       <div className="w-full max-w-md mx-auto px-4 py-5">
         <AlcoholTracker />
       </div>

@@ -3,7 +3,8 @@ import { JobsHome } from "@/components/jobs/JobsHome";
 export default function JobsPage() {
   return (
     <main className="min-h-screen bg-[#f8f9fc] flex flex-col">
-      <div className="sticky top-0 z-10" style={{ background: "#4f46e5" }}>
+      <div style={{ height: "env(safe-area-inset-top)", background: "#4f46e5", flexShrink: 0 }} />
+      <div className="sticky z-10" style={{ top: "env(safe-area-inset-top)", background: "#4f46e5" }}>
         <div className="w-full max-w-md mx-auto px-4 h-14 flex items-center gap-3">
           <a href="/" className="text-white/70 active:text-white transition-colors">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
