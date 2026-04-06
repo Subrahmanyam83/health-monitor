@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audio Tools</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0d0d1a; color: #e0e0f0;
+      min-height: 100vh; display: flex;
+      align-items: center; justify-content: center; padding: 1.5rem;
+    }
+
+    .card {
+      background: #16162a; border: 1px solid #2a2a4a;
+      border-radius: 1.25rem; padding: 2.5rem 2rem;
+      width: 100%; max-width: 520px;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.5); text-align: center;
+    }
+
+    h1 {
+      font-size: 1.75rem; font-weight: 700;
+      background: linear-gradient(135deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 0.4rem;
+    }
+    .subtitle { font-size: 0.9rem; color: #7070a0; margin-bottom: 1.75rem; }
+
+    /* ── Top-level tool tabs ── */
+    .tool-tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; }
+    .tool-tab {
+      flex: 1; padding: 0.75rem 0.5rem; border-radius: 0.75rem;
+      border: 1px solid #2a2a4a; background: #1a1a30;
+      color: #7070a0; font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; line-height: 1.4;
+    }
+    .tool-tab .tab-icon { font-size: 1.4rem; display: block; margin-bottom: 0.2rem; }
+    .tool-tab.active {
+      background: #1e1440; border-color: #7c3aed; color: #c4b5fd;
+      box-shadow: 0 0 0 1px #7c3aed33;
+    }
+
+    /* ── Drop zone ── */
+    .drop-zone {
+      border: 2px dashed #3a3a6a; border-radius: 1rem;
+      padding: 2.5rem 1rem; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative; margin-bottom: 1.5rem;
+    }
+    .drop-zone:hover, .drop-zone.dragover { border-color: #7c3aed; background: rgba(124,58,237,0.06); }
+    .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .drop-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .drop-label { font-size: 1rem; color: #9090c0; }
+    .drop-label span { color: #a78bfa; font-weight: 600; }
+    .file-name { margin-top: 0.75rem; font-size: 0.85rem; color: #60a5fa; word-break: break-all; display: none; }
+
+    /* ── Buttons ── */
+    .btn {
+      width: 100%; padding: 0.85rem; border: none; border-radius: 0.75rem;
+      font-size: 1rem; font-weight: 600; cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: linear-gradient(135deg, #7c3aed, #3b82f6); color: #fff; }
+    .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-secondary { background: #1e1e38; color: #a0a0c0; border: 1px solid #2a2a4a; margin-top: 0.75rem; }
+
+    /* ── Processing ── */
+    .spinner {
+      width: 52px; height: 52px;
+      border: 4px solid #2a2a4a; border-top-color: #7c3aed;
+      border-radius: 50%; animation: spin 0.9s linear infinite;
+      margin: 0 auto 1.25rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .status-text { font-size: 1rem; color: #9090c0; margin-bottom: 0.5rem; }
+    .hint-text { font-size: 0.78rem; color: #504070; margin-top: 0.4rem; }
+
+    /* ── Done ── */
+    .done-title { font-size: 1.1rem; font-weight: 600; color: #4ade80; margin-bottom: 1.25rem; }
+    audio { width: 100%; border-radius: 0.5rem; margin-bottom: 1.25rem; accent-color: #7c3aed; }
+    .dl-btn {
+      display: block; width: 100%; padding: 0.85rem; border-radius: 0.75rem;
+      color: #fff; font-size: 1rem; font-weight: 600;
+      text-decoration: none; margin-bottom: 0.75rem; transition: opacity 0.2s;
+    }
+    .dl-btn:hover { opacity: 0.88; }
+    .dl-btn-mp3 { background: linear-gradient(135deg, #065f46, #047857); }
+    .dl-btn-mp4 { background: linear-gradient(135deg, #1e3a5f, #1d4ed8); }
+
+    /* ── Background picker ── */
+    .bg-thumb {
+      border-radius: 0.5rem; overflow: hidden; cursor: pointer;
+      border: 2px solid transparent; transition: border-color 0.2s, transform 0.15s;
+      position: relative;
+    }
+    .bg-thumb img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+    .bg-thumb .bg-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.55); font-size: 0.62rem; color: #e0e0f0;
+      padding: 0.18rem 0; text-align: center;
+    }
+    .bg-thumb:hover { transform: scale(1.04); }
+    .bg-thumb.active { border-color: #7c3aed; }
+
+    /* ── Error ── */
+    .error-msg {
+      background: #1a0a0a; border: 1px solid #5a2020; border-radius: 0.5rem;
+      padding: 0.75rem 1rem; font-size: 0.8rem; color: #f87171;
+      text-align: left; word-break: break-word;
+      max-height: 120px; overflow-y: auto; margin: 0.75rem 0 1rem;
+    }
+
+    /* ── Tool panels ── */
+    .tool-panel { display: none; }
+    .tool-panel.active { display: block; }
+    .tool-section { display: none; }
+    .tool-section.active { display: block; }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <h1>🎵 Audio Tools</h1>
+  <p class="subtitle">Two tools to help you work with your music files.</p>
+
+  <!-- Top-level tool tabs -->
+  <div class="tool-tabs">
+    <button class="tool-tab active" id="tool-tab-vr" onclick="switchTool('vr')">
+      <span class="tab-icon">🎤</span>Voice Remover
+    </button>
+    <button class="tool-tab" id="tool-tab-mp4" onclick="switchTool('mp4')">
+      <span class="tab-icon">🎬</span>MP3 → MP4
+    </button>
+    <button class="tool-tab" id="tool-tab-yt" onclick="switchTool('yt')">
+      <span class="tab-icon">▶️</span>YouTube → MP3
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       TOOL 1 — Voice Remover
+       ══════════════════════════════════════════════════ -->
+  <div class="tool-panel active" id="panel-vr">
+
+    <!-- Upload -->
+    <div class="tool-section active" id="vr-upload">
+      <p style="font-size:0.85rem;color:#6060a0;margin-bottom:1.25rem;">
+        Upload an MP3 and we'll strip the vocals, giving you a clean instrumental track.
+      </p>
+      <div class="drop-zone" id="vr-drop">
+        <input type="file" id="vr-file" accept=".mp3,audio/mpeg" />
+        <div class="drop-icon">🎵</div>
+        <div class="drop-label">Drop your MP3 here or <span>browse</span></div>
+        <div class="file-name" id="vr-filename"></div>
+      </div>
+      <button class="btn btn-primary" id="vr-btn" disabled>Remove Vocals</button>
+    </div>
+
+    <!-- Processing -->
+    <div class="tool-section" id="vr-processing">
+      <div class="spinner"></div>
+      <div class="status-text" id="vr-status">Starting…</div>
+      <div class="hint-text">This may take 1–3 minutes depending on song length.</div>
+    </div>
+
+    <!-- Done -->
+    <div class="tool-section" id="vr-done">
+      <div class="done-title">✅ Vocals removed!</div>
+      <audio id="vr-player" controls></audio>
+      <a class="dl-btn dl-btn-mp3" id="vr-download" download>⬇ Download Instrumental MP3</a>
+      <button class="btn btn-secondary" id="vr-reset">Process another song</button>
+    </div>
+
+    <!-- Error -->
+    <div class="tool-section" id="vr-error">
+      <div style="font-size:2rem;margin-bottom:.5rem">⚠️</div>
+      <strong style="color:#f87171">Something went wrong</strong>
+      <div class="error-msg" id="vr-errmsg"></div>
+      <button class="btn btn-primary" id="vr-retry">Try Again</button>
+    </div>
+
+  </div><!-- /panel-vr -->
+
+  <!-- ══════════════════════════════════════════════════
+       TOOL 2 — MP3 to MP4 Converter
+       ══════════════════════════════════════════════════ -->
+  <div class="tool-panel" id="panel-mp4">
+
+    <!-- Upload -->
+    <div class="tool-section active" id="mp4-upload">
+      <p style="font-size:0.85rem;color:#6060a0;margin-bottom:1.25rem;">
+        Upload an MP3 and we'll wrap it in an MP4 with a nature background — ready to upload to YouTube.
+      </p>
+      <div class="drop-zone" id="mp4-drop">
+        <input type="file" id="mp4-file" accept=".mp3,audio/mpeg" />
+        <div class="drop-icon">🎶</div>
+        <div class="drop-label">Drop your MP3 here or <span>browse</span></div>
+        <div class="file-name" id="mp4-filename"></div>
+      </div>
+      <!-- Background picker -->
+      <div style="margin-bottom:1.25rem;text-align:left;">
+        <div style="font-size:0.82rem;color:#7070a0;margin-bottom:0.6rem;font-weight:600;">Choose background:</div>
+        <div id="bg-picker" style="display:grid;grid-template-columns:repeat(5,1fr);gap:0.4rem;">
+          <div class="bg-thumb active" data-bg="1" onclick="selectBg('1')" title="Forest">
+            <img src="/bg1.jpg" alt="Forest" />
+            <div class="bg-label">🌲 Forest</div>
+          </div>
+          <div class="bg-thumb" data-bg="2" onclick="selectBg('2')" title="Valley">
+            <img src="/bg2.jpg" alt="Valley" />
+            <div class="bg-label">🏔 Valley</div>
+          </div>
+          <div class="bg-thumb" data-bg="3" onclick="selectBg('3')" title="Waterfall">
+            <img src="/bg3.jpg" alt="Waterfall" />
+            <div class="bg-label">💧 Falls</div>
+          </div>
+          <div class="bg-thumb" data-bg="4" onclick="selectBg('4')" title="Beach">
+            <img src="/bg4.jpg" alt="Beach" />
+            <div class="bg-label">🏖 Beach</div>
+          </div>
+          <div class="bg-thumb" data-bg="5" onclick="selectBg('5')" title="Sunset">
+            <img src="/bg5.jpg" alt="Sunset" />
+            <div class="bg-label">🌅 Sunset</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="mp4-btn" disabled>Convert to MP4</button>
+    </div>
+
+    <!-- Processing -->
+    <div class="tool-section" id="mp4-processing">
+      <div class="spinner"></div>
+      <div class="status-text" id="mp4-status">Converting…</div>
+      <div class="hint-text">Wrapping your audio with a nature background. This may take a minute.</div>
+    </div>
+
+    <!-- Done -->
+    <div class="tool-section" id="mp4-done">
+      <div class="done-title">✅ MP4 ready!</div>
+      <a class="dl-btn dl-btn-mp4" id="mp4-download" download>⬇ Download MP4 for YouTube</a>
+      <button class="btn btn-secondary" id="mp4-reset">Convert another file</button>
+    </div>
+
+    <!-- Error -->
+    <div class="tool-section" id="mp4-error">
+      <div style="font-size:2rem;margin-bottom:.5rem">⚠️</div>
+      <strong style="color:#f87171">Something went wrong</strong>
+      <div class="error-msg" id="mp4-errmsg"></div>
+      <button class="btn btn-primary" id="mp4-retry">Try Again</button>
+    </div>
+
+  </div><!-- /panel-mp4 -->
+
+  <!-- ══════════════════════════════════════════════════
+       TOOL 3 — YouTube → MP3
+       ══════════════════════════════════════════════════ -->
+  <div class="tool-panel" id="panel-yt">
+
+    <!-- Input -->
+    <div class="tool-section active" id="yt-upload">
+      <p style="font-size:0.85rem;color:#6060a0;margin-bottom:1.25rem;">
+        Paste a YouTube link and we'll download the audio as a high-quality MP3.
+      </p>
+      <div style="margin-bottom:1.5rem;">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">▶️</div>
+        <input id="yt-url" type="url" placeholder="https://www.youtube.com/watch?v=..."
+          style="width:100%;padding:0.75rem 1rem;background:#1a1a30;border:1px solid #2a2a4a;
+                 border-radius:0.75rem;color:#e0e0f0;font-size:0.95rem;outline:none;
+                 transition:border-color 0.2s;" />
+      </div>
+      <button class="btn btn-primary" id="yt-btn" disabled>⬇ Download MP3</button>
+    </div>
+
+    <!-- Processing -->
+    <div class="tool-section" id="yt-processing">
+      <div class="spinner"></div>
+      <div class="status-text" id="yt-status">Downloading…</div>
+      <div class="hint-text">Fetching best quality audio from YouTube.</div>
+    </div>
+
+    <!-- Done -->
+    <div class="tool-section" id="yt-done">
+      <div class="done-title">✅ Downloaded!</div>
+      <audio id="yt-player" controls style="width:100%;border-radius:0.5rem;margin-bottom:1.25rem;accent-color:#7c3aed;"></audio>
+      <a class="dl-btn dl-btn-mp3" id="yt-download" download>⬇ Download MP3</a>
+      <button class="btn btn-secondary" id="yt-reset">Download another</button>
+    </div>
+
+    <!-- Error -->
+    <div class="tool-section" id="yt-error">
+      <div style="font-size:2rem;margin-bottom:.5rem">⚠️</div>
+      <strong style="color:#f87171">Something went wrong</strong>
+      <div class="error-msg" id="yt-errmsg"></div>
+      <button class="btn btn-primary" id="yt-retry">Try Again</button>
+    </div>
+
+  </div><!-- /panel-yt -->
+
+</div>
+<script>
+  const $ = id => document.getElementById(id);
+
+  // ── Tool switcher ──────────────────────────────────────────────────────────
+  function switchTool(tool) {
+    ['vr','mp4','yt'].forEach(t => {
+      $(`tool-tab-${t}`).classList.toggle('active', t === tool);
+      $(`panel-${t}`).classList.toggle('active', t === tool);
+    });
+  }
+
+  // ── Generic section switcher per tool ─────────────────────────────────────
+  function showSection(tool, section) {
+    ['upload','processing','done','error'].forEach(s => {
+      const el = $(`${tool}-${s}`);
+      if (el) el.classList.toggle('active', s === section);
+    });
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TOOL 1 — Voice Remover
+  // ══════════════════════════════════════════════════════════════════════════
+  setupDropZone('vr-drop', 'vr-file', 'vr-filename', 'vr-btn');
+
+  $('vr-btn').addEventListener('click', async () => {
+    const file = $('vr-file')._file || $('vr-file').files[0];
+    if (!file) return;
+    showSection('vr', 'processing');
+    $('vr-status').textContent = 'Uploading…';
+    try {
+      const fd = new FormData(); fd.append('file', file);
+      const res = await fetch('/upload', { method: 'POST', body: fd });
+      if (!res.ok) { const e = await res.json().catch(() => ({ detail: res.statusText })); throw new Error(e.detail); }
+      const { job_id } = await res.json();
+      $('vr-status').textContent = 'Removing vocals…';
+      pollVR(job_id);
+    } catch (e) { vrError(e.message); }
+  });
+
+  function pollVR(jobId) {
+    const t = setInterval(async () => {
+      try {
+        const data = await fetch(`/status/${jobId}`).then(r => r.json());
+        if (data.status === 'processing') $('vr-status').textContent = 'Removing vocals…';
+        if (data.status === 'done') {
+          clearInterval(t);
+          $('vr-player').src = data.download_url;
+          $('vr-download').href = data.download_url;
+          $('vr-download').download = data.filename || 'instrumental.mp3';
+          showSection('vr', 'done');
+        } else if (data.status === 'error') {
+          clearInterval(t); vrError(data.error || 'Processing failed');
+        }
+      } catch (e) { clearInterval(t); vrError(e.message); }
+    }, 3000);
+  }
+
+  function vrError(msg) { $('vr-errmsg').textContent = msg; showSection('vr', 'error'); }
+  $('vr-reset').addEventListener('click', () => { resetDropZone('vr-drop', 'vr-file', 'vr-filename', 'vr-btn'); $('vr-player').src = ''; showSection('vr', 'upload'); });
+  $('vr-retry').addEventListener('click', () => { resetDropZone('vr-drop', 'vr-file', 'vr-filename', 'vr-btn'); showSection('vr', 'upload'); });
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TOOL 2 — MP3 → MP4 Converter
+  // ══════════════════════════════════════════════════════════════════════════
+  setupDropZone('mp4-drop', 'mp4-file', 'mp4-filename', 'mp4-btn');
+
+  let selectedBg = '1';
+  function selectBg(n) {
+    selectedBg = n;
+    document.querySelectorAll('.bg-thumb').forEach(el => el.classList.toggle('active', el.dataset.bg === n));
+  }
+
+  $('mp4-btn').addEventListener('click', async () => {
+    const file = $('mp4-file')._file || $('mp4-file').files[0];
+    if (!file) return;
+    showSection('mp4', 'processing');
+    $('mp4-status').textContent = 'Uploading…';
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('bg', selectedBg);
+      const res = await fetch('/upload-for-mp4', { method: 'POST', body: fd });
+      if (!res.ok) { const e = await res.json().catch(() => ({ detail: res.statusText })); throw new Error(e.detail); }
+      const { job_id } = await res.json();
+      $('mp4-status').textContent = 'Converting to MP4…';
+      pollMP4(job_id);
+    } catch (e) { mp4Error(e.message); }
+  });
+
+  function pollMP4(jobId) {
+    const t = setInterval(async () => {
+      try {
+        const data = await fetch(`/mp4-job-status/${jobId}`).then(r => r.json());
+        if (data.status === 'done') {
+          clearInterval(t);
+          $('mp4-download').href = data.download_url;
+          $('mp4-download').download = data.filename || 'video.mp4';
+          showSection('mp4', 'done');
+        } else if (data.status === 'error') {
+          clearInterval(t); mp4Error(data.error || 'Conversion failed');
+        }
+      } catch (e) { clearInterval(t); mp4Error(e.message); }
+    }, 3000);
+  }
+
+  function mp4Error(msg) { $('mp4-errmsg').textContent = msg; showSection('mp4', 'error'); }
+  $('mp4-reset').addEventListener('click', () => { resetDropZone('mp4-drop', 'mp4-file', 'mp4-filename', 'mp4-btn'); showSection('mp4', 'upload'); });
+  $('mp4-retry').addEventListener('click', () => { resetDropZone('mp4-drop', 'mp4-file', 'mp4-filename', 'mp4-btn'); showSection('mp4', 'upload'); });
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TOOL 3 — YouTube → MP3
+  // ══════════════════════════════════════════════════════════════════════════
+  const ytUrlInput = $('yt-url');
+  ytUrlInput.addEventListener('focus', () => ytUrlInput.style.borderColor = '#7c3aed');
+  ytUrlInput.addEventListener('blur',  () => ytUrlInput.style.borderColor = '#2a2a4a');
+  ytUrlInput.addEventListener('input', () => {
+    const v = ytUrlInput.value.trim();
+    $('yt-btn').disabled = !v.includes('youtube.com') && !v.includes('youtu.be');
+  });
+  ytUrlInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !$('yt-btn').disabled) $('yt-btn').click(); });
+
+  $('yt-btn').addEventListener('click', async () => {
+    const url = ytUrlInput.value.trim();
+    if (!url) return;
+    showSection('yt', 'processing');
+    $('yt-status').textContent = 'Connecting to YouTube…';
+    try {
+      const res = await fetch('/from-youtube', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url }),
+      });
+      if (!res.ok) { const e = await res.json().catch(() => ({ detail: res.statusText })); throw new Error(e.detail); }
+      const { job_id } = await res.json();
+      $('yt-status').textContent = 'Downloading audio…';
+      pollYT(job_id);
+    } catch (e) { ytError(e.message); }
+  });
+
+  function pollYT(jobId) {
+    const t = setInterval(async () => {
+      try {
+        const data = await fetch(`/status/${jobId}`).then(r => r.json());
+        if (data.status === 'downloading') $('yt-status').textContent = 'Downloading audio…';
+        if (data.status === 'done') {
+          clearInterval(t);
+          $('yt-player').src = data.download_url;
+          $('yt-download').href = data.download_url;
+          $('yt-download').download = data.filename || 'audio.mp3';
+          showSection('yt', 'done');
+        } else if (data.status === 'error') {
+          clearInterval(t); ytError(data.error || 'Download failed');
+        }
+      } catch (e) { clearInterval(t); ytError(e.message); }
+    }, 3000);
+  }
+
+  function ytError(msg) { $('yt-errmsg').textContent = msg; showSection('yt', 'error'); }
+  $('yt-reset').addEventListener('click', () => { ytUrlInput.value = ''; $('yt-btn').disabled = true; $('yt-player').src = ''; showSection('yt', 'upload'); });
+  $('yt-retry').addEventListener('click', () => { ytUrlInput.value = ''; $('yt-btn').disabled = true; showSection('yt', 'upload'); });
+
+  // ── Shared drop zone helpers ───────────────────────────────────────────────
+  function setupDropZone(zoneId, inputId, nameId, btnId) {
+    const zone = $(zoneId), input = $(inputId);
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault(); zone.classList.remove('dragover');
+      const f = e.dataTransfer.files[0]; if (f) setFile(f, inputId, nameId, btnId);
+    });
+    input.addEventListener('change', () => { if (input.files[0]) setFile(input.files[0], inputId, nameId, btnId); });
+  }
+
+  function setFile(file, inputId, nameId, btnId) {
+    if (!file.name.toLowerCase().endsWith('.mp3')) { alert('Please select an MP3 file.'); return; }
+    $(inputId)._file = file;
+    $(nameId).textContent = file.name;
+    $(nameId).style.display = 'block';
+    $(btnId).disabled = false;
+  }
+
+  function resetDropZone(zoneId, inputId, nameId, btnId) {
+    $(inputId).value = ''; $(inputId)._file = null;
+    $(nameId).style.display = 'none'; $(nameId).textContent = '';
+    $(btnId).disabled = true;
+  }
+</script>
+</body>
+</html>

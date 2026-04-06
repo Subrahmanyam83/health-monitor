@@ -38,6 +38,19 @@ function NutritionIcon() {
   );
 }
 
+function WaveIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none">
+      <rect x="1" y="9" width="2.5" height="6" rx="1.25" fill="currentColor" />
+      <rect x="5" y="6" width="2.5" height="12" rx="1.25" fill="currentColor" />
+      <rect x="9" y="3" width="2.5" height="18" rx="1.25" fill="currentColor" />
+      <rect x="13" y="6" width="2.5" height="12" rx="1.25" fill="currentColor" />
+      <rect x="17" y="9" width="2.5" height="6" rx="1.25" fill="currentColor" />
+      <rect x="21" y="10.5" width="2" height="3" rx="1" fill="currentColor" opacity="0.5" />
+    </svg>
+  );
+}
+
 function JobIcon() {
   return (
     <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none">
@@ -85,6 +98,17 @@ const appDefs = [
     iconShadow: "rgba(244,63,94,0.25)",
     cardTint: "rgba(255,228,230,0.5)",
     icon: <NutritionIcon />,
+  },
+  {
+    href: "/voice-reducer",
+    name: "Voice Reducer",
+    description: "Remove vocals, convert to MP4 & download YouTube as MP3",
+    borderColors: "#c4b5fd, #ddd6fe, #ede9fe, #c4b5fd",
+    iconBg: "#ede9fe",
+    iconColor: "#5b21b6",
+    iconShadow: "rgba(124,58,237,0.25)",
+    cardTint: "rgba(237,233,254,0.5)",
+    icon: <WaveIcon />,
   },
   {
     href: "/jobs",
