@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
   },
   other: {
-    "theme-color": "#ffffff",
+    "theme-color": "#c5cdd9",
     "apple-mobile-web-app-status-bar-style": "default",
   },
 };
@@ -32,7 +32,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   viewportFit: "cover",
-  themeColor: "#ffffff",
+  themeColor: "#c5cdd9",
 };
 
 export default function RootLayout({
