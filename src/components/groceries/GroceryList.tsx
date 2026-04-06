@@ -48,7 +48,7 @@ export function GroceryList() {
       </div>
 
       {/* Master List link */}
-      <Link href="/groceries/master">
+      <Link href="/cart-mate/master">
         <div className="bg-emerald-50 border border-emerald-100 rounded-2xl px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-lg">📋</span>

@@ -10,7 +10,7 @@ export default function JobsPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </a>
-          <p className="text-white font-bold text-lg">💼 Jobs</p>
+          <p className="text-white font-bold text-lg">JobPulse</p>
         </div>
       </div>
       <div className="flex-1 w-full max-w-md mx-auto px-4 py-6">

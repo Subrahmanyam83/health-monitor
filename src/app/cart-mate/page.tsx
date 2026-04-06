@@ -11,7 +11,7 @@ export default function GroceriesPage() {
             <svg className="w-7 h-7 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
             </svg>
-            <span className="text-base font-semibold tracking-tight">Groceries</span>
+            <span className="text-base font-semibold tracking-tight">CartMate</span>
           </Link>
         </div>
       </div>

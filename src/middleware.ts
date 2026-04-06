@@ -13,7 +13,7 @@ export default clerkMiddleware(async (auth, request) => {
   const country = request.headers.get("x-vercel-ip-country") ?? "";
   const blocked = country === "IN";
 
-  if (blocked && request.nextUrl.pathname.startsWith("/alcohol")) {
+  if (blocked && request.nextUrl.pathname.startsWith("/sip-log")) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 

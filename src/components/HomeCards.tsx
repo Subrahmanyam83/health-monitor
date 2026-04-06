@@ -66,8 +66,8 @@ function JobIcon() {
 
 const appDefs = [
   {
-    href: "/alcohol",
-    name: "Alcohol Tracker",
+    href: "/sip-log",
+    name: "SipLog",
     description: "Track drinks & monitor your weekly intake",
     borderColors: "#fcd34d, #fde68a, #fef9c3, #fcd34d",
     iconBg: "#fef3c7",
@@ -78,8 +78,8 @@ const appDefs = [
     hideInCountries: ["IN"],
   },
   {
-    href: "/groceries",
-    name: "Groceries",
+    href: "/cart-mate",
+    name: "CartMate",
     description: "Manage your shopping list & bought items",
     borderColors: "#6ee7b7, #a7f3d0, #d1fae5, #6ee7b7",
     iconBg: "#d1fae5",
@@ -89,8 +89,8 @@ const appDefs = [
     icon: <CartIcon />,
   },
   {
-    href: "/nutrition",
-    name: "My Nutrition",
+    href: "/nutri-day",
+    name: "NutriDay",
     description: "Daily meals, calories & burn for your family",
     borderColors: "#fda4af, #fecdd3, #ffe4e6, #fda4af",
     iconBg: "#ffe4e6",
@@ -100,8 +100,8 @@ const appDefs = [
     icon: <NutritionIcon />,
   },
   {
-    href: "/voice-reducer",
-    name: "Voice Reducer",
+    href: "/vocal-lift",
+    name: "VocalLift",
     description: "Remove vocals, convert to MP4 & download YouTube as MP3",
     borderColors: "#c4b5fd, #ddd6fe, #ede9fe, #c4b5fd",
     iconBg: "#ede9fe",
@@ -111,8 +111,8 @@ const appDefs = [
     icon: <WaveIcon />,
   },
   {
-    href: "/jobs",
-    name: "Job Finder",
+    href: "/job-pulse",
+    name: "JobPulse",
     description: "Daily matches from LinkedIn, Indeed & more",
     borderColors: "#a5b4fc, #c7d2fe, #e0e7ff, #a5b4fc",
     iconBg: "#e0e7ff",
