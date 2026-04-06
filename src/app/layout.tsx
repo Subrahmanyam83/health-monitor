@@ -21,6 +21,10 @@ export const metadata: Metadata = {
     title: "MiniApps",
     statusBarStyle: "default",
   },
+  other: {
+    "theme-color": "#ffffff",
+    "apple-mobile-web-app-status-bar-style": "default",
+  },
 };
 
 export const viewport: Viewport = {
