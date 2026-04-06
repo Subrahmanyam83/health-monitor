@@ -10,12 +10,12 @@ export default async function Home() {
   const firstName = user?.firstName ?? user?.emailAddresses?.[0]?.emailAddress?.split("@")[0];
 
   return (
-    <main className="min-h-screen flex flex-col" style={{ background: "#c5cdd9" }}>
+    <main className="min-h-screen flex flex-col" style={{ background: "#f0f2f5" }}>
       {/* Safe-area spacer — on black-translucent PWA installs the page extends
           behind the status bar. This white spacer fills that gap so the status
           bar never shows the grey header. On "default" (opaque) installs the
           env() value is 0 and this div has zero height. */}
-      <div style={{ height: "env(safe-area-inset-top)", background: "#c5cdd9", flexShrink: 0 }} />
+      <div style={{ height: "env(safe-area-inset-top)", background: "#f0f2f5", flexShrink: 0 }} />
 
       {/* 4px rainbow top accent */}
       <div
