@@ -1,20 +1,5 @@
 [
   {
-    "id": "fb24563c-4e0e-45e4-8dc9-81b9d17a0380",
-    "name": "Urad Dal - Black",
-    "bought": true
-  },
-  {
-    "id": "d5736f99-fbc7-44b7-a894-af30feac79bf",
-    "name": "Groundnuts",
-    "bought": true
-  },
-  {
-    "id": "6d958b89-cf6c-4190-b633-3e95e9314128",
-    "name": "Moong Dal",
-    "bought": true
-  },
-  {
     "id": "393aa412-124f-44a8-bfb4-f1af34d8778a",
     "name": "Raagi",
     "bought": false
@@ -63,11 +48,6 @@
     "id": "aa55b734-5eba-47aa-b822-3ae6d805fdbb",
     "name": "Garlic",
     "bought": false
-  },
-  {
-    "id": "32cdcc40-215f-41a9-b2ab-2fea4b6f4609",
-    "name": "test",
-    "bought": true
   },
   {
     "id": "cb2b4af3-e151-4a8e-bfcf-97073bb04e39",
