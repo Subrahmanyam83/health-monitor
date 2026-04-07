@@ -51,6 +51,19 @@ function WaveIcon() {
   );
 }
 
+function FitIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none">
+      <path d="M6.5 6.5 L17.5 17.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="2" y="5" width="4" height="3" rx="1.5" fill="currentColor" />
+      <rect x="18" y="5" width="4" height="3" rx="1.5" fill="currentColor" />
+      <rect x="2" y="16" width="4" height="3" rx="1.5" fill="currentColor" />
+      <rect x="18" y="16" width="4" height="3" rx="1.5" fill="currentColor" />
+      <rect x="5.5" y="10.5" width="13" height="3" rx="1.5" fill="currentColor" opacity="0.7" />
+    </svg>
+  );
+}
+
 function JobIcon() {
   return (
     <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none">
@@ -108,6 +121,17 @@ const appDefs = [
     iconShadow: "rgba(124,58,237,0.25)",
     cardTint: "rgba(237,233,254,0.5)",
     icon: <WaveIcon />,
+  },
+  {
+    href: "/fit-day",
+    name: "FitDay",
+    description: "Your daily exercise routine & body part tracker",
+    borderColors: "#fdba74, #fed7aa, #fff7ed, #fdba74",
+    iconBg: "#fff7ed",
+    iconColor: "#c2410c",
+    iconShadow: "rgba(234,88,12,0.25)",
+    cardTint: "rgba(255,237,213,0.5)",
+    icon: <FitIcon />,
   },
   {
     href: "/job-pulse",
