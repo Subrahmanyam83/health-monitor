@@ -12,7 +12,7 @@
   {
     "id": "073aa2c3-cc76-41e5-88d0-f38e5d5bebf8",
     "name": "Nikki multi vatimins",
-    "bought": false
+    "bought": true
   },
   {
     "id": "75d6acde-1a71-4201-b452-a98e5946c496",
@@ -57,12 +57,12 @@
   {
     "id": "42a8a987-ed15-4833-8a25-c413f9cca4e8",
     "name": "Popcorn",
-    "bought": false
+    "bought": true
   },
   {
     "id": "ad14ac43-013b-44ea-bcc5-5fc0215eb307",
     "name": "Nikki toothpaste",
-    "bought": false
+    "bought": true
   },
   {
     "id": "bc6c735f-3385-4ae1-8792-e5b6fcbb36c6",
