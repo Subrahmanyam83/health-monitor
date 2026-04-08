@@ -17,6 +17,7 @@ const SEED_DATA: ExerciseData = {
     { id: "6", name: "Dead Pigeon (Figure-4)", duration: "60 sec each side (~2 min)", description: "Releases piriformis off the sciatic nerve", bodyParts: ["hips", "nerve", "back"], phase: "Release", order: 6, imageUrl: "https://cdn.motra.com/exercise-assets/08be8279ad/thumbnailOriginal.jpg" },
     { id: "7", name: "Supine Spinal Twist with Quad Stretch", duration: "45 sec each side (~2 min)", description: "Combines hip & spinal release — doubles SI joint decompression", bodyParts: ["back", "hips", "nerve"], phase: "Release", order: 7, imageUrl: "https://www.functionalmovement.com/exercises/image/22418" },
     { id: "8", name: "Glute Bridge", sets: 3, reps: 12, duration: "~3 min", description: "Activates glutes so the lower back stops compensating", bodyParts: ["legs", "back", "core"], phase: "Activate", order: 8, imageUrl: "https://cdn.motra.com/exercise-assets/0b90543c13/thumbnailOriginal.jpg" },
+    { id: "9", name: "Bird Dog", sets: 3, reps: 10, duration: "~3 min", description: "Trains anti-rotation core stability & coordinates glute and back activation", bodyParts: ["core", "back", "legs"], phase: "Activate", order: 9, imageUrl: "https://cdn.motra.com/exercise-assets/a86ff9443d/thumbnailOriginal.jpg" },
   ],
 };
 
