@@ -61,7 +61,7 @@ export function EntryForm({ onAdded }: { onAdded: () => void }) {
   return (
     <CollapsibleSection title="Log a Drink" defaultOpen={true}>
       <form onSubmit={handleSubmit} className="space-y-4 pt-1">
-        <div className="grid grid-cols-[1fr_1fr_64px] gap-2 items-start">
+        <div className="space-y-2">
           <div className="space-y-1">
             <label className="text-xs font-medium text-gray-400">Date</label>
             <input
@@ -72,28 +72,30 @@ export function EntryForm({ onAdded }: { onAdded: () => void }) {
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-400">Drink</label>
-            <Select value={type} onValueChange={(v) => setType(v as DrinkType)}>
-              <SelectTrigger className="w-full rounded-lg border-gray-200 bg-gray-50 h-7 text-xs px-2">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {DRINK_TYPES.map((d) => (
-                  <SelectItem key={d.value} value={d.value} className="text-xs">{d.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <div className="grid grid-cols-[1fr_80px] gap-2 items-start">
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-gray-400">Drink</label>
+              <Select value={type} onValueChange={(v) => setType(v as DrinkType)}>
+                <SelectTrigger className="w-full rounded-lg border-gray-200 bg-gray-50 h-9 text-sm px-3">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {DRINK_TYPES.map((d) => (
+                    <SelectItem key={d.value} value={d.value} className="text-sm">{d.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-400">Qty</label>
-            <input
-              type="number" min="0.5" step="0.5" value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:bg-white transition-all"
-              style={{ fontSize: "16px" }}
-            />
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-gray-400">Qty</label>
+              <input
+                type="number" min="0.5" step="0.5" value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:bg-white transition-all"
+                style={{ fontSize: "16px" }}
+              />
+            </div>
           </div>
         </div>
 
