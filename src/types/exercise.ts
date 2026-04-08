@@ -11,6 +11,7 @@ export type Exercise = {
   phase?: string;         // e.g. "Warm Up", "Release", "Activate"
   imageBase64?: string;   // optional user-uploaded image (base64)
   imageUrl?: string;      // optional external image URL
+  videoUrl?: string;      // optional video clip URL (loops silently)
   order: number;
 };
 

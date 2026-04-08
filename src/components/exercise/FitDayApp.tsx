@@ -189,6 +189,7 @@ function ExerciseCard({ ex, onDelete, onUpdateImage }: {
   const phase = ex.phase ? PHASE_COLORS[ex.phase] : null;
   const setsReps = ex.sets && ex.reps ? `${ex.sets} sets × ${ex.reps} reps` : ex.duration ?? "";
   const imageSrc = ex.imageBase64 ?? ex.imageUrl;
+  const hasMedia = imageSrc || ex.videoUrl;
 
   return (
     <>
@@ -215,7 +216,9 @@ function ExerciseCard({ ex, onDelete, onUpdateImage }: {
             style={{ background: "#fff7ed", cursor: "pointer" }}
             onClick={() => imageSrc ? setLightbox(true) : setAddingImage(true)}
           >
-            {imageSrc ? (
+            {ex.videoUrl ? (
+              <video src={ex.videoUrl} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+            ) : imageSrc ? (
               <img src={imageSrc} alt={ex.name} className="w-full h-full object-cover" />
             ) : (
               <>
