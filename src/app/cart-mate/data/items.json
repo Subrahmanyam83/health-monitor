@@ -38,5 +38,10 @@
     "id": "919378af-8c61-4397-9ace-99a7b5ef815e",
     "name": "Coconut milk",
     "bought": false
+  },
+  {
+    "id": "cde5ad4e-7e00-489e-89e5-7dff70ae2a60",
+    "name": "Milk",
+    "bought": false
   }
 ]
