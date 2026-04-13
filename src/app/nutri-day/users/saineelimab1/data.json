@@ -248,7 +248,7 @@
           ]
         }
       ],
-      "waterMl": 0,
+      "waterMl": 1000,
       "exercises": [
         {
           "id": "a5a73bb5-6ad8-4c12-ae63-548cf850a860",
