@@ -227,6 +227,36 @@
       ],
       "waterMl": 0,
       "exercises": []
+    },
+    {
+      "date": "2026-04-13",
+      "memberId": "0d829d60-856c-4cb8-8020-7f15817b48df",
+      "meals": [
+        {
+          "id": "9b875e5b-06f5-4070-8a1d-effb0fe8d859",
+          "type": "breakfast",
+          "foods": [
+            {
+              "fdcId": "2709128",
+              "name": "Upma",
+              "portionGrams": 823,
+              "calories": 716,
+              "proteinG": 16.3,
+              "carbsG": 113.7,
+              "fatG": 21.7
+            }
+          ]
+        }
+      ],
+      "waterMl": 0,
+      "exercises": [
+        {
+          "id": "a5a73bb5-6ad8-4c12-ae63-548cf850a860",
+          "type": "cycling",
+          "minutes": 22,
+          "caloriesBurned": 191
+        }
+      ]
     }
   ]
 }
