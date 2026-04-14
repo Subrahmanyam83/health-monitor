@@ -98,5 +98,10 @@
     "id": "b235e05c-c1f3-433e-b011-73d9254070c5",
     "name": "Banana",
     "bought": true
+  },
+  {
+    "id": "7935759a-1865-49de-89cd-8c876d496003",
+    "name": "Coffee",
+    "bought": false
   }
 ]
