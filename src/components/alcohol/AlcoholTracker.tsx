@@ -167,7 +167,7 @@ export function AlcoholTracker() {
             return (
               <CollapsibleSection
                 title="Entry Log"
-                defaultOpen={false}
+                defaultOpen={true}
                 badge={`${data.entries.length}`}
               >
                 <div className="pt-1 flex flex-col gap-3">
