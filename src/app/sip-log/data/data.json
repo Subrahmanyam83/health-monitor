@@ -68,10 +68,10 @@
       "id": "2026-04-16T17:47:39.801Z",
       "date": "2026-04-16",
       "type": "beer",
-      "quantity": 3,
+      "quantity": 1,
       "unit": "300ml",
       "customMl": 1320,
-      "totalMl": 3960
+      "totalMl": 1320
     }
   ]
 }
