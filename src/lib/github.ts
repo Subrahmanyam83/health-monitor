@@ -1,4 +1,4 @@
-const GITHUB_TOKEN = process.env.APP_GITHUB_TOKEN!;
+const GITHUB_TOKEN = (process.env.APP_GITHUB_TOKEN ?? process.env.GITHUB_TOKEN)!;
 const GITHUB_OWNER = process.env.GITHUB_OWNER!;
 const GITHUB_REPO = process.env.GITHUB_REPO!;
 const BASE_URL = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
