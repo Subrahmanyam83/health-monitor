@@ -66,7 +66,8 @@
       "type": "beer",
       "quantity": 3,
       "unit": "300ml",
-      "totalMl": 900
+      "customMl": 440,
+      "totalMl": 1320
     },
     {
       "id": "2026-04-16T17:47:39.801Z",
