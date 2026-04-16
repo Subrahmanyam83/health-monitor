@@ -63,6 +63,14 @@
       "quantity": 3,
       "unit": "300ml",
       "totalMl": 900
+    },
+    {
+      "id": "2026-04-16T17:47:39.801Z",
+      "date": "2026-04-16",
+      "type": "beer",
+      "quantity": 3,
+      "unit": "300ml",
+      "totalMl": 900
     }
   ]
 }
