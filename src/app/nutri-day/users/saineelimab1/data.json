@@ -435,6 +435,59 @@
       ],
       "waterMl": 0,
       "exercises": []
+    },
+    {
+      "date": "2026-04-15",
+      "memberId": "0d829d60-856c-4cb8-8020-7f15817b48df",
+      "meals": [
+        {
+          "id": "da6846a3-056f-44ca-a77d-1b1e89c81ee1",
+          "type": "breakfast",
+          "foods": [
+            {
+              "fdcId": "2020713",
+              "name": "OATS",
+              "portionGrams": 120,
+              "calories": 450,
+              "proteinG": 15,
+              "carbsG": 81,
+              "fatG": 7.5
+            }
+          ]
+        },
+        {
+          "id": "cf8186f9-0a6a-47e9-afd8-78657deec5c2",
+          "type": "lunch",
+          "foods": [
+            {
+              "fdcId": "2068232",
+              "name": "CHICKPEAS",
+              "portionGrams": 276,
+              "calories": 353,
+              "proteinG": 22.1,
+              "carbsG": 57.4,
+              "fatG": 4.4
+            }
+          ]
+        },
+        {
+          "id": "2df3f70b-e176-4f93-b736-a45543e3713a",
+          "type": "dinner",
+          "foods": [
+            {
+              "fdcId": "2077766",
+              "name": "RICE",
+              "portionGrams": 210,
+              "calories": 748,
+              "proteinG": 14,
+              "carbsG": 163.4,
+              "fatG": 0
+            }
+          ]
+        }
+      ],
+      "waterMl": 0,
+      "exercises": []
     }
   ]
 }
