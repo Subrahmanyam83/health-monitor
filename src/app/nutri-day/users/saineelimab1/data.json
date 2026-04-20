@@ -488,6 +488,74 @@
       ],
       "waterMl": 0,
       "exercises": []
+    },
+    {
+      "date": "2026-04-20",
+      "memberId": "0d829d60-856c-4cb8-8020-7f15817b48df",
+      "meals": [
+        {
+          "id": "36d4b054-ec35-4f34-9461-590f9a93de70",
+          "type": "breakfast",
+          "foods": [
+            {
+              "fdcId": "2020713",
+              "name": "OATS",
+              "portionGrams": 60,
+              "calories": 225,
+              "proteinG": 7.5,
+              "carbsG": 40.5,
+              "fatG": 3.8
+            }
+          ]
+        },
+        {
+          "id": "146c18cc-2efa-4ba2-86d7-b93465ee5012",
+          "type": "lunch",
+          "foods": [
+            {
+              "fdcId": "2709784",
+              "name": "Cucumber, raw",
+              "portionGrams": 1000,
+              "calories": 160,
+              "proteinG": 6.2,
+              "carbsG": 29.5,
+              "fatG": 1.8
+            }
+          ]
+        },
+        {
+          "id": "e691d1e5-7a5d-49f7-ad23-d1afe6367139",
+          "type": "snack",
+          "foods": [
+            {
+              "fdcId": "2074342",
+              "name": "ALMONDS",
+              "portionGrams": 25,
+              "calories": 158,
+              "proteinG": 5.8,
+              "carbsG": 3.3,
+              "fatG": 14.2
+            }
+          ]
+        },
+        {
+          "id": "34e005dc-daad-4f6f-85af-c446a212176c",
+          "type": "dinner",
+          "foods": [
+            {
+              "fdcId": "2077766",
+              "name": "RICE",
+              "portionGrams": 210,
+              "calories": 748,
+              "proteinG": 14,
+              "carbsG": 163.4,
+              "fatG": 0
+            }
+          ]
+        }
+      ],
+      "waterMl": 0,
+      "exercises": []
     }
   ]
 }
