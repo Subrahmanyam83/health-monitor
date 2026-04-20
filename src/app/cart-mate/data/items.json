@@ -118,5 +118,10 @@
     "id": "012e1b5f-a96f-4b71-ae66-3a0f51218367",
     "name": "Milk",
     "bought": false
+  },
+  {
+    "id": "27991bbb-eda9-4bb2-91d2-59345fc457fb",
+    "name": "Kaaram stuff",
+    "bought": false
   }
 ]
