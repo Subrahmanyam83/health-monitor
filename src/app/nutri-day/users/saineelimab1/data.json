@@ -556,6 +556,36 @@
       ],
       "waterMl": 0,
       "exercises": []
+    },
+    {
+      "date": "2026-04-21",
+      "memberId": "0d829d60-856c-4cb8-8020-7f15817b48df",
+      "meals": [
+        {
+          "id": "e208fb66-b72a-48a0-95a1-ee00afa25ab7",
+          "type": "breakfast",
+          "foods": [
+            {
+              "fdcId": "2073049",
+              "name": "DOSA MIX",
+              "portionGrams": 80,
+              "calories": 288,
+              "proteinG": 9.6,
+              "carbsG": 57.6,
+              "fatG": 1.6
+            }
+          ]
+        }
+      ],
+      "waterMl": 750,
+      "exercises": [
+        {
+          "id": "5eccbb36-25a5-41d5-9d71-5112bbc1b8ab",
+          "type": "gym_workout",
+          "minutes": 13,
+          "caloriesBurned": 132
+        }
+      ]
     }
   ]
 }
