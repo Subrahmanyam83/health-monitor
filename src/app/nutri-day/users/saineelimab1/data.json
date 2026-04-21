@@ -620,6 +620,45 @@
               "fatG": 6.9
             }
           ]
+        },
+        {
+          "id": "2df30d6f-6da9-4940-8c85-d0200ad5b41b",
+          "type": "dinner",
+          "foods": [
+            {
+              "fdcId": "2071343",
+              "name": "PASTA",
+              "portionGrams": 130,
+              "calories": 442,
+              "proteinG": 14.7,
+              "carbsG": 85.8,
+              "fatG": 3.7
+            },
+            {
+              "fdcId": "2077766",
+              "name": "RICE",
+              "portionGrams": 120,
+              "calories": 427,
+              "proteinG": 8,
+              "carbsG": 93.4,
+              "fatG": 0
+            }
+          ]
+        },
+        {
+          "id": "e1efd052-6f35-4c6e-9b2c-ae81e6e26f95",
+          "type": "snack",
+          "foods": [
+            {
+              "fdcId": "2708036",
+              "name": "Crepe, chocolate filled",
+              "portionGrams": 150,
+              "calories": 255,
+              "proteinG": 7.3,
+              "carbsG": 34.4,
+              "fatG": 9.8
+            }
+          ]
         }
       ],
       "waterMl": 750,
