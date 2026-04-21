@@ -360,6 +360,36 @@
               "fatG": 12.8
             }
           ]
+        },
+        {
+          "id": "c25eefba-7df2-4d64-b6d8-b9d60ad4e636",
+          "type": "lunch",
+          "foods": [
+            {
+              "fdcId": "2077766",
+              "name": "RICE",
+              "portionGrams": 240,
+              "calories": 854,
+              "proteinG": 16,
+              "carbsG": 186.7,
+              "fatG": 0
+            }
+          ]
+        },
+        {
+          "id": "0afe1f49-2925-4887-a920-2198c2e45e1d",
+          "type": "dinner",
+          "foods": [
+            {
+              "fdcId": "454412",
+              "name": "PAV BHAJI MASALA",
+              "portionGrams": 280,
+              "calories": 1064,
+              "proteinG": 56,
+              "carbsG": 112,
+              "fatG": 56
+            }
+          ]
         }
       ],
       "waterMl": 0,
