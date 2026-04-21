@@ -605,6 +605,21 @@
               "fatG": 1.6
             }
           ]
+        },
+        {
+          "id": "01033e87-77a1-4b13-ac8f-7b96449be4bd",
+          "type": "lunch",
+          "foods": [
+            {
+              "fdcId": "2637940",
+              "name": "SALAD",
+              "portionGrams": 150,
+              "calories": 227,
+              "proteinG": 3.9,
+              "carbsG": 40.5,
+              "fatG": 6.9
+            }
+          ]
         }
       ],
       "waterMl": 750,
