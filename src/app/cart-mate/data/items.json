@@ -153,5 +153,10 @@
     "id": "4ef086d5-7c44-4c34-88fd-82f9afcb55c0",
     "name": "Test",
     "bought": true
+  },
+  {
+    "id": "f339c56c-af2a-41e1-b35e-08df7f44b333",
+    "name": "Test",
+    "bought": false
   }
 ]
