@@ -142,6 +142,6 @@
   {
     "id": "48e35432-846c-4e96-bf60-65ea3447b2ec",
     "name": "Test",
-    "bought": false
+    "bought": true
   }
 ]
