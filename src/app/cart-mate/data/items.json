@@ -132,7 +132,7 @@
   {
     "id": "4ad321f2-483a-4e14-92a8-2ac9dcecb7cf",
     "name": "Red mirchi",
-    "bought": false
+    "bought": true
   },
   {
     "id": "9653874f-8cbd-4fed-a0d6-7bee6a071ccd",
@@ -162,7 +162,7 @@
   {
     "id": "b7249ff7-00bd-4a31-a1c3-3e3faf766091",
     "name": "Ginger",
-    "bought": false
+    "bought": true
   },
   {
     "id": "63a92f7a-607a-40bd-918d-e8e23dbf29ca",
