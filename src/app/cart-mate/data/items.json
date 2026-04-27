@@ -13,5 +13,10 @@
     "id": "9ef0d1b6-23f4-4b2b-a50e-5f5036b2d20a",
     "name": "Dye",
     "bought": false
+  },
+  {
+    "id": "43f110ef-5f2b-47a7-8f21-c598188fb557",
+    "name": "Tomatoes",
+    "bought": false
   }
 ]
