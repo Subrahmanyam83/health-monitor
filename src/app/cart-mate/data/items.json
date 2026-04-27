@@ -203,5 +203,10 @@
     "id": "57c642c0-c88c-4e96-9fa2-0358e7a82d22",
     "name": "Unsalted butter",
     "bought": false
+  },
+  {
+    "id": "9ef0d1b6-23f4-4b2b-a50e-5f5036b2d20a",
+    "name": "Dye",
+    "bought": false
   }
 ]
